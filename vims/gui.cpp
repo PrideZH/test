@@ -287,13 +287,12 @@ void browse_cursor(int page_cars_number)
 	Sleep(1000 / FPS);
 }
 
-void browse_print_cars(int *cars_id, int page_cars_number, int page)
+void browse_print_cars(PCAR *cars, int page_cars_number, int page)
 {
 	for (int n = page * 20; n < page_cars_number + page * 20; n++)
 	{
 		gotoxy(9, 5 + n % 20);
-		PCAR car;
-		car = get_car(cars_id[n]);
+		PCAR car = cars[n];
 		printf(" %-5d|%-23s|%-11s|%-11s|  %-6d| %-8.1f|%-11s|%-11s|%-15.2f| ÐÞ¸Ä É¾³ý ",
 			car->id, car->type, car->manufacturer, car->grade, car->seat, car->emission, car->gearbox, car->colour, car->price);
 	}

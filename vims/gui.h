@@ -75,7 +75,7 @@ void browse_cursor(int page_cars_number);
  *         page_cars_number-当前页的车辆数量
  *         page-显示第几页
  ***********************************************************************/
-void browse_print_cars(int *cars_id, int page_cars_number, int page);
+void browse_print_cars(PCAR *cars, int page_cars_number, int page);
 
 /***********************************************************************
  * 说明：  更新浏览车辆界面的页数显示

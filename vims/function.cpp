@@ -127,29 +127,26 @@ void car_empty(PCAR car, int position)
 	}
 }
 
-void browse_cars(int *cars_id, int cars_id_number)
+void browse_cars(PCAR *cars, int cars_number)
 {
-	if (NULL == cars_id)
+	if (NULL == cars) //如果cars参数为NULL，则获取所有车辆
 	{
-		cars_id = (int *)malloc((get_all_car_number()) * sizeof(int));
+		cars = (PCAR *)malloc(get_all_car_number() * sizeof(PCAR)); 
 		PCAR car = head->rear;
-		for (int i = 0; car != NULL; car = car->rear, i++) //获取所有车辆下标
-		{
-			cars_id[i] = car->id;
-		}
+		for (int i = 0; car != NULL; car = car->rear, i++) cars[i] = car;
 	}
-	if (0 == cars_id_number) //无车辆信息时弹窗提示并返回
+	if (0 == cars_number) //无车辆信息时弹窗提示并返回
 	{
 		popup_prompt("无车辆信息，无法查询...");
 		return ;
 	}
 	int mode = 0; //车辆排序方式
 	int page = 0; //当前页数
-	int all_page = (cars_id_number - 1) / 20; //计算总页数
-	int page_cars_number = page == all_page ? cars_id_number - page * 20 : 20; //计算当前页汽车数量
+	int all_page = (cars_number - 1) / 20; //计算总页数
+	int page_cars_number = page == all_page ? cars_number - page * 20 : 20; //计算当前页汽车数量
 	init_browse_interface(); //绘制浏览车辆界面
 	update_browse_page(page, all_page); //页数信息显示
-	browse_print_cars(cars_id, page_cars_number, page); //显示第一页车辆
+	browse_print_cars(cars, page_cars_number, page); //显示第一页车辆
 	while (1)
 	{
 		ReadConsoleInput(hIn, &Buf, 1, &Result); //读取操作事件
@@ -161,53 +158,59 @@ void browse_cars(int *cars_id, int cars_id_number)
 			{
 				if (mouse_pos.X > 8 && mouse_pos.X < 13)  //编号
 				{
-					browse_sort(cars_id, cars_id_number, mode = !(mode % 2));
-					browse_print_cars(cars_id, page_cars_number, page); //显示车辆
+					browse_qsort(cars, 0, cars_number - 1, mode = !(mode % 2));
+					browse_print_cars(cars, page_cars_number, page); //显示车辆
+					update_browse_sort(mode); //更新排序方式显示信息
+					break;
 				}
 				else if (mouse_pos.X > 63 && mouse_pos.X < 70) //座位数
 				{
-					browse_sort(cars_id, cars_id_number, mode = !(mode % 2) + 2);
-					browse_print_cars(cars_id, page_cars_number, page); //显示车辆
+					browse_qsort(cars, 0, cars_number - 1, mode = !(mode % 2) + 2);
+					browse_print_cars(cars, page_cars_number, page); //显示车辆
+					update_browse_sort(mode); //更新排序方式显示信息
 				}
 				else if (mouse_pos.X > 72 && mouse_pos.X < 80) //排量
 				{
-					browse_sort(cars_id, cars_id_number, mode = !(mode % 2) + 4);
-					browse_print_cars(cars_id, page_cars_number, page); //显示车辆
+					browse_qsort(cars, 0, cars_number - 1, mode = !(mode % 2) + 4);
+					browse_print_cars(cars, page_cars_number, page); //显示车辆
+					update_browse_sort(mode); //更新排序方式显示信息
 				}
 				else if (mouse_pos.X > 106 && mouse_pos.X < 115) //车辆价格
 				{
-					browse_sort(cars_id, cars_id_number, mode = !(mode % 2) + 6);
-					browse_print_cars(cars_id, page_cars_number, page); //显示车辆
+					browse_qsort(cars, 0, cars_number - 1, mode = !(mode % 2) + 6);
+					browse_print_cars(cars, page_cars_number, page); //显示车辆
+					update_browse_sort(mode); //更新排序方式显示信息
 				}
 			}
 			else if (mouse_pos.Y > 4 && mouse_pos.Y < 26 && mouse_pos.Y < 5 + page_cars_number)
 			{
 				if (mouse_pos.X > 123 && mouse_pos.X < 128) //修改
 				{
-					set_car(get_car(cars_id[mouse_pos.Y - 5 + page * 20]));
+					set_car(cars[mouse_pos.Y - 5 + page * 20]);
 					init_browse_interface();
 					update_browse_page(page, all_page); //更新页数显示
 					update_browse_sort(mode); //更新排序方式显示信息
-					browse_print_cars(cars_id, page_cars_number, page); //显示车辆
+					browse_print_cars(cars, page_cars_number, page); //显示车辆
 				}
 				else if (mouse_pos.X > 128 && mouse_pos.X < 133) //删除
 				{
 					int position = mouse_pos.Y - 5 + page * 20;
-					if (del_car(get_car(cars_id[position]))) //删除成功时去除此车辆下标
+					if (del_car(cars[position])) //删除成功时去除此车辆下标
 					{
-						for (int j = position; j < cars_id_number; j++)
+						for (int j = position; j < cars_number; j++)
 						{
-							cars_id[j] = cars_id[j + 1];
+							cars[j] = cars[j + 1];
 						}
-						if (0 == --cars_id_number) return; //没有车辆时返回上一菜单
+						if (0 == --cars_number) return; //没有车辆时返回上一菜单
 						init_browse_interface();
-						all_page = (cars_id_number - 1) / 20; //计算总页数
+						all_page = (cars_number - 1) / 20; //计算总页数
 						if (page > all_page) page--; //如果当前页无车辆时，转到上一页
-						update_browse_page(page, all_page); //更新页数显示
-						update_browse_sort(mode); //更新排序方式显示信息
-						page_cars_number = page == all_page ? cars_id_number - page * 20 : 20; //计算当前页汽车数量
-						browse_print_cars(cars_id, page_cars_number, page); //显示车辆
+						page_cars_number = page == all_page ? cars_number - page * 20 : 20; //计算当前页汽车数量
 					}
+					init_browse_interface();
+					update_browse_page(page, all_page); //更新页数显示
+					update_browse_sort(mode); //更新排序方式显示信息
+					browse_print_cars(cars, page_cars_number, page); //显示车辆
 				}
 			}
 			else if (26 == mouse_pos.Y) //换页和返回操作
@@ -218,8 +221,8 @@ void browse_cars(int *cars_id, int cars_id_number)
 					{
 						page--;
 						init_browse_interface();
-						page_cars_number = page == all_page ? cars_id_number - page * 20 : 20; //计算当前页汽车数量
-						browse_print_cars(cars_id, page_cars_number, page); //显示车辆
+						page_cars_number = page == all_page ? cars_number - page * 20 : 20; //计算当前页汽车数量
+						browse_print_cars(cars, page_cars_number, page); //显示车辆
 						update_browse_page(page, all_page); //更新页数显示
 						update_browse_sort(mode); //更新排序方式显示信息
 					}
@@ -230,8 +233,8 @@ void browse_cars(int *cars_id, int cars_id_number)
 					{
 						page++;
 						init_browse_interface();
-						page_cars_number = page == all_page ? cars_id_number - page * 20 : 20; //计算当前页汽车数量
-						browse_print_cars(cars_id, page_cars_number, page); //显示车辆
+						page_cars_number = page == all_page ? cars_number - page * 20 : 20; //计算当前页汽车数量
+						browse_print_cars(cars, page_cars_number, page); //显示车辆
 						update_browse_page(page, all_page); //更新页数显示
 						update_browse_sort(mode); //更新排序方式显示信息
 					}
@@ -246,209 +249,151 @@ void browse_cars(int *cars_id, int cars_id_number)
 	}
 }
 
-void browse_sort(int *cars_id, int cars_id_number, int mode)
+void browse_qsort(PCAR *cars, int _left, int _right, int mode)
 {
-	PCAR car = head->rear;
-	int tmp_i;
-	float tmp_f;
-	update_browse_sort(mode); //更新排序方式显示信息
+	if (_left >= _right) return;
+	int left = _left;
+	int right = _right;
+	PCAR pivot = get_pivot(cars, _left, _right, mode); 
+	while (left < right)
+	{
+		switch (mode)
+		{
+		case 0:
+			while (right > left && cars[right]->id >= pivot->id) right--;
+			cars[left] = cars[right];
+			while (right > left && cars[left]->id <= pivot->id) left++;
+			cars[right] = cars[left];
+			break;
+		case 1:
+			while (right > left && cars[right]->id <= pivot->id) right--;
+			cars[left] = cars[right];
+			while (right > left && cars[left]->id >= pivot->id) left++;
+			cars[right] = cars[left];
+			break;
+		case 2:
+			while (right > left && cars[right]->seat >= pivot->seat) right--;
+			cars[left] = cars[right];
+			while (right > left && cars[left]->seat <= pivot->seat) left++;
+			cars[right] = cars[left];
+			break;
+		case 3:
+			while (right > left && cars[right]->seat <= pivot->seat) right--;
+			cars[left] = cars[right];
+			while (right > left && cars[left]->seat >= pivot->seat) left++;
+			cars[right] = cars[left];
+			break;
+		case 4:
+			while (right > left && cars[right]->emission >= pivot->emission) right--;
+			if(right > left) cars[left] = cars[right];
+			while (right > left && cars[left]->emission <= pivot->emission) left++;
+			if (right > left) cars[right] = cars[left];
+			break;
+		case 5:
+			while (right > left && cars[right]->emission <= pivot->emission) right--;
+			cars[left] = cars[right];
+			while (right > left && cars[left]->emission >= pivot->emission) left++;
+			cars[right] = cars[left];
+			break;
+		case 6:
+			while (right > left && cars[right]->price >= pivot->price) right--;
+			cars[left] = cars[right];
+			while (right > left && cars[left]->price <= pivot->price) left++;
+			cars[right] = cars[left];
+			break;
+		case 7:
+			while (right > left && cars[right]->price <= pivot->price) right--;
+			cars[left] = cars[right];
+			while (right > left && cars[left]->price >= pivot->price) left++;
+			cars[right] = cars[left];
+			break;
+		}
+	}
+	cars[left] = pivot;
+	browse_qsort(cars, _left, right - 1, mode);
+	browse_qsort(cars, left + 1, _right, mode);
+}
+
+PCAR get_pivot(PCAR *cars, int left, int right, int mode)
+{
+	int i_m, i_l, i_r;
+	float f_m, f_l, f_r;
 	switch (mode)
 	{
-	case 0: //编号-顺序
-	{
-		for (int i = 0; i < cars_id_number - 1; i++)
+	case 0:
+	case 1:
+		i_m = cars[(right - left) / 2]->id;
+		i_r = cars[right]->id;
+		i_l = cars[left]->id;
+		if (i_l < i_m && i_m < i_r || i_r < i_m && i_m < i_l)
 		{
-			for (int j = i + 1; j < cars_id_number; j++)
-			{
-				if (cars_id[j] < cars_id[i])
-				{
-					cars_id[j] ^= cars_id[i];
-					cars_id[i] ^= cars_id[j];
-					cars_id[j] ^= cars_id[i];
-				}
-			}
+			PCAR temp = cars[(right - left) / 2];
+			cars[(right - left) / 2] = cars[left];
+			cars[left] = temp;
 		}
-		break;
+		else if (i_l < i_r && i_r < i_m || i_m < i_r && i_r < i_l)
+		{
+			PCAR temp = cars[right];
+			cars[right] = cars[left];
+			cars[left] = temp;
+		}
+		return cars[left];
+	case 2:
+	case 3:
+		i_m = cars[(right - left) / 2]->seat;
+		i_r = cars[right]->seat;
+		i_l = cars[left]->seat;
+		if (i_l < i_m && i_m < i_r || i_r < i_m && i_m < i_l)
+		{
+			PCAR temp = cars[(right - left) / 2];
+			cars[(right - left) / 2] = cars[left];
+			cars[left] = temp;
+		}
+		else if (i_l < i_r && i_r < i_m || i_m < i_r && i_r < i_l)
+		{
+			PCAR temp = cars[right];
+			cars[right] = cars[left];
+			cars[left] = temp;
+		}
+		return cars[left];
+	case 4:
+	case 5:
+		f_m = cars[(right - left) / 2]->emission;
+		f_r = cars[right]->emission;
+		f_l = cars[left]->emission;
+		if (f_l < f_m && f_m < f_r || f_r < f_m && f_m < f_l)
+		{
+			PCAR temp = cars[(right - left) / 2];
+			cars[(right - left) / 2] = cars[left];
+			cars[left] = temp;
+		}
+		else if (f_l < f_r && f_r < f_m || f_m < f_r && f_r < f_l)
+		{
+			PCAR temp = cars[right];
+			cars[right] = cars[left];
+			cars[left] = temp;
+		}
+		return cars[left];
+	case 6:
+	case 7:
+		f_m = cars[(right - left) / 2]->price;
+		f_r = cars[right]->price;
+		f_l = cars[left]->price;
+		if (f_l < f_m && f_m < f_r || f_r < f_m && f_m < f_l)
+		{
+			PCAR temp = cars[(right - left) / 2];
+			cars[(right - left) / 2] = cars[left];
+			cars[left] = temp;
+		}
+		else if (f_l < f_r && f_r < f_m || f_m < f_r && f_r < f_l)
+		{
+			PCAR temp = cars[right];
+			cars[right] = cars[left];
+			cars[left] = temp;
+		}
+		return cars[left];
 	}
-	case 1: //编号-逆序
-	{
-		for (int i = 0; i < cars_id_number - 1; i++)
-		{
-			for (int j = i + 1; j < cars_id_number; j++)
-			{
-				if (cars_id[j] > cars_id[i])
-				{
-					cars_id[j] ^= cars_id[i];
-					cars_id[i] ^= cars_id[j];
-					cars_id[j] ^= cars_id[i];
-				}
-			}
-		}
-		break;
-	}
-	case 2: //座位数-顺序
-	{
-		int *cars_seat = (int *)malloc((cars_id_number) * sizeof(int));
-		int i;
-		for (i = 0; i < cars_id_number; i++)
-		{
-			cars_seat[i] = get_car(cars_id[i])->seat;
-		}
-		for (i = 0; i < cars_id_number; i++)
-		{
-			tmp_i = i;
-			for (int j = i + 1; j < cars_id_number; j++)
-			{
-				if (cars_seat[j] < cars_seat[tmp_i])
-				{
-					cars_seat[j] ^= cars_seat[tmp_i];
-					cars_seat[tmp_i] ^= cars_seat[j];
-					cars_seat[j] ^= cars_seat[tmp_i];
-
-					cars_id[j] ^= cars_id[tmp_i];
-					cars_id[tmp_i] ^= cars_id[j];
-					cars_id[j] ^= cars_id[tmp_i];
-				}
-			}
-		}
-		break;
-	}
-	case 3: //座位数-逆序
-	{
-		int *cars_seat = (int *)malloc((cars_id_number) * sizeof(int));
-		int i;
-		for (i = 0; i < cars_id_number; i++)
-		{
-			cars_seat[i] = get_car(cars_id[i])->seat;
-		}
-		for (i = 0; i < cars_id_number; i++)
-		{
-			tmp_i = i;
-			for (int j = i + 1; j < cars_id_number; j++)
-			{
-				if (cars_seat[j] > cars_seat[tmp_i])
-				{
-					cars_seat[j] ^= cars_seat[tmp_i];
-					cars_seat[tmp_i] ^= cars_seat[j];
-					cars_seat[j] ^= cars_seat[tmp_i];
-
-					cars_id[j] ^= cars_id[tmp_i];
-					cars_id[tmp_i] ^= cars_id[j];
-					cars_id[j] ^= cars_id[tmp_i];
-				}
-			}
-		}
-		break;
-	}
-	case 4: //排量-顺序
-	{
-		float *cars_emission = (float *)malloc((cars_id_number) * sizeof(float));
-		int i;
-		for (i = 0; i < cars_id_number; i++)
-		{
-			cars_emission[i] = get_car(cars_id[i])->emission;
-		}
-		for (i = 0; i < cars_id_number; i++)
-		{
-			tmp_i = i;
-			for (int j = i + 1; j < cars_id_number; j++)
-			{
-				if (cars_emission[j] < cars_emission[tmp_i])
-				{
-					cars_emission[j] += cars_emission[tmp_i];
-					cars_emission[tmp_i] = cars_emission[j] - cars_emission[tmp_i];
-					cars_emission[j] -= cars_emission[tmp_i];
-
-					cars_id[j] ^= cars_id[tmp_i];
-					cars_id[tmp_i] ^= cars_id[j];
-					cars_id[j] ^= cars_id[tmp_i];
-				}
-			}
-		}
-		break;
-	}
-	case 5: //排量-逆序
-	{
-		float *cars_emission = (float *)malloc((cars_id_number) * sizeof(float));
-		int i;
-		for (i = 0; i < cars_id_number; i++)
-		{
-			cars_emission[i] = get_car(cars_id[i])->emission;
-		}
-		for (i = 0; i < cars_id_number; i++)
-		{
-			tmp_i = i;
-			for (int j = i + 1; j < cars_id_number; j++)
-			{
-				if (cars_emission[j] > cars_emission[tmp_i])
-				{
-					cars_emission[j] += cars_emission[tmp_i];
-					cars_emission[tmp_i] = cars_emission[j] - cars_emission[tmp_i];
-					cars_emission[j] -= cars_emission[tmp_i];
-
-					cars_id[j] ^= cars_id[tmp_i];
-					cars_id[tmp_i] ^= cars_id[j];
-					cars_id[j] ^= cars_id[tmp_i];
-				}
-			}
-		}
-		break;
-	}
-	case 6: //价格-顺序
-	{
-		float *cars_price = (float *)malloc((cars_id_number) * sizeof(float));
-		int i;
-		for (i = 0; i < cars_id_number; i++)
-		{
-			cars_price[i] = get_car(cars_id[i])->price;
-		}
-		for (i = 0; i < cars_id_number; i++)
-		{
-			tmp_i = i;
-			for (int j = i + 1; j < cars_id_number; j++)
-			{
-				if (cars_price[j] < cars_price[tmp_i])
-				{
-					cars_price[j] += cars_price[tmp_i];
-					cars_price[tmp_i] = cars_price[j] - cars_price[tmp_i];
-					cars_price[j] -= cars_price[tmp_i];
-
-					cars_id[j] ^= cars_id[tmp_i];
-					cars_id[tmp_i] ^= cars_id[j];
-					cars_id[j] ^= cars_id[tmp_i];
-				}
-			}
-		}
-		break;
-	}
-	case 7: //价格-逆序
-	{
-		float *cars_price = (float *)malloc((cars_id_number) * sizeof(float));
-		int i;
-		for (i = 0; i < cars_id_number; i++)
-		{
-			cars_price[i] = get_car(cars_id[i])->price;
-		}
-		for (i = 0; i < cars_id_number; i++)
-		{
-			tmp_i = i;
-			for (int j = i + 1; j < cars_id_number; j++)
-			{
-				if (cars_price[j] > cars_price[tmp_i])
-				{
-					cars_price[j] += cars_price[tmp_i];
-					cars_price[tmp_i] = cars_price[j] - cars_price[tmp_i];
-					cars_price[j] -= cars_price[tmp_i];
-
-					cars_id[j] ^= cars_id[tmp_i];
-					cars_id[tmp_i] ^= cars_id[j];
-					cars_id[j] ^= cars_id[tmp_i];
-				}
-			}
-		}
-		break;
-	}
-	}
+	return cars[left];
 }
 
 void find_car()
@@ -456,14 +401,12 @@ void find_car()
 	int input_i;
 	float input_f;
 	char input_s[24];
-	PCAR car;
-	int cars_id_number;
-	int *cars_id = (int *)malloc((get_all_car_number()) * sizeof(int));
+	PCAR *cars = (PCAR *)malloc(get_all_car_number() * sizeof(PCAR)); 
 	init_find_interface();
 	while (1)
 	{
-		car = head->rear;
-		cars_id_number = 0;
+		PCAR car = head->rear;
+		int cars_number = 0;
 		ReadConsoleInput(hIn, &Buf, 1, &Result); //读取操作事件
 		mouse_pos = Buf.Event.MouseEvent.dwMousePosition; //获得鼠标位置
 		find_cursor(); //根据鼠标位置绘制查询车辆的光标
@@ -475,67 +418,42 @@ void find_car()
 				{
 				case 8: //编号
 					popup_input_int("请输入编号:", &input_i, 4);
-					do
-					{
-						if (car->id == input_i)
-						{
-							cars_id[cars_id_number] = car->id;
-							cars_id_number++;
-						}
+					do {
+						if (car->id == input_i) cars[cars_number++] = car;
 					} while ((car = car->rear) != NULL);
-					browse_cars(cars_id, cars_id_number);
+					browse_cars(cars, cars_number);
 					init_find_interface();
 					break;
 				case 11: //厂商
 					popup_input_str("请输入厂商:", input_s, MAX_CAR_MANUFACTURER);
-					do
-					{
-						if (!strcmp(car->type, input_s))
-						{
-							cars_id[cars_id_number] = car->id;
-							cars_id_number++;
-						}
+					do {
+						if (!strcmp(car->type, input_s)) cars[cars_number++] = car;
 					} while ((car = car->rear) != NULL);
-					browse_cars(cars_id, cars_id_number);
+					browse_cars(cars, cars_number);
 					init_find_interface();
 					break;
 				case 14: //座位数
 					popup_input_int("请输入座位数:", &input_i, MAX_CAR_SEAT);
-					do
-					{
-						if (car->seat == input_i)
-						{
-							cars_id[cars_id_number] = car->id;
-							cars_id_number++;
-						}
+					do {
+						if (car->seat == input_i) cars[cars_number++] = car;
 					} while ((car = car->rear) != NULL);
-					browse_cars(cars_id, cars_id_number);
+					browse_cars(cars, cars_number);
 					init_find_interface();
 					break;
 				case 17: //变速箱
 					popup_input_str("请输入变速箱:", input_s, MAX_CAR_GEARBOX);
-					do
-					{
-						if (!strcmp(car->gearbox, input_s))
-						{
-							cars_id[cars_id_number] = car->id;
-							cars_id_number++;
-						}
+					do {
+						if (!strcmp(car->gearbox, input_s)) cars[cars_number++] = car;
 					} while ((car = car->rear) != NULL);
-					browse_cars(cars_id, cars_id_number);
+					browse_cars(cars, cars_number);
 					init_find_interface();
 					break;
 				case 20: //车辆价格
 					popup_input_float("请输入车辆价格:", &input_f, MAX_CAR_PRICE);
-					do
-					{
-						if (car->price == input_f)
-						{
-							cars_id[cars_id_number] = car->id;
-							cars_id_number++;
-						}
+					do {
+						if (car->price == input_f) cars[cars_number++] = car;
 					} while ((car = car->rear) != NULL);
-					browse_cars(cars_id, cars_id_number);
+					browse_cars(cars, cars_number);
 					init_find_interface();
 					break;
 				}
@@ -546,54 +464,34 @@ void find_car()
 				{
 				case 8: //车辆型号
 					popup_input_str("请输入车辆型号:", input_s, MAX_CAR_TYPE);
-					do
-					{
-						if (!strcmp(car->type, input_s))
-						{
-							cars_id[cars_id_number] = car->id;
-							cars_id_number++;
-						}
+					do {
+						if (!strcmp(car->type, input_s)) cars[cars_number++] = car;
 					} while ((car = car->rear) != NULL);
-					browse_cars(cars_id, cars_id_number);
+					browse_cars(cars, cars_number);
 					init_find_interface();
 					break;
 				case 11: //车型级别
 					popup_input_str("请输入车型级别:", input_s, MAX_CAR_GRADE);
-					do
-					{
-						if (!strcmp(car->grade, input_s))
-						{
-							cars_id[cars_id_number] = car->id;
-							cars_id_number++;
-						}
+					do {
+						if (!strcmp(car->grade, input_s)) cars[cars_number++] = car;
 					} while ((car = car->rear) != NULL);
-					browse_cars(cars_id, cars_id_number);
+					browse_cars(cars, cars_number);
 					init_find_interface();
 					break;
 				case 14: //排量
 					popup_input_float("请输入排量:", &input_f, MAX_CAR_EMISSION);
-					do
-					{
-						if (car->emission == input_i)
-						{
-							cars_id[cars_id_number] = car->id;
-							cars_id_number++;
-						}
+					do {
+						if (car->emission == input_i) cars[cars_number++] = car;
 					} while ((car = car->rear) != NULL);
-					browse_cars(cars_id, cars_id_number);
+					browse_cars(cars, cars_number);
 					init_find_interface();
 					break;
 				case 17: //车身颜色
 					popup_input_str("请输入车身颜色:", input_s, MAX_CAR_COLOUR);
-					do
-					{
-						if (!strcmp(car->colour, input_s))
-						{
-							cars_id[cars_id_number] = car->id;
-							cars_id_number++;
-						}
+					do {
+						if (!strcmp(car->colour, input_s)) cars[cars_number++] = car;
 					} while ((car = car->rear) != NULL);
-					browse_cars(cars_id, cars_id_number);
+					browse_cars(cars, cars_number);
 					init_find_interface();
 					break;
 				case 20: //返回
