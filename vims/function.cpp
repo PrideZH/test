@@ -1,5 +1,5 @@
 #include "function.h"
-#include "gui.h"
+#include "ui.h"
 
 void add_car()
 {
@@ -161,7 +161,6 @@ void browse_cars(PCAR *cars, int cars_number)
 					browse_qsort(cars, 0, cars_number - 1, mode = !(mode % 2));
 					browse_print_cars(cars, page_cars_number, page); //显示车辆
 					update_browse_sort(mode); //更新排序方式显示信息
-					break;
 				}
 				else if (mouse_pos.X > 63 && mouse_pos.X < 70) //座位数
 				{
@@ -481,7 +480,7 @@ void find_car()
 				case 14: //排量
 					popup_input_float("请输入排量:", &input_f, MAX_CAR_EMISSION);
 					do {
-						if (car->emission == input_i) cars[cars_number++] = car;
+						if (car->emission == input_f) cars[cars_number++] = car;
 					} while ((car = car->rear) != NULL);
 					browse_cars(cars, cars_number);
 					init_find_interface();

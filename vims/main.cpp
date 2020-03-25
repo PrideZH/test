@@ -1,4 +1,4 @@
-#include "gui.h"
+#include "ui.h"
 #include "function.h"
 
 HANDLE hIn, hOut;
@@ -53,10 +53,10 @@ void init()
 	SetConsoleTitle(L"车辆信息管理系统");
 	SetConsoleTextAttribute(hOut, CONSOLE_COLOR); //设置控制台颜色
 	//设置缓冲区大小
-	COORD size = { 142, 30 }; 
+	COORD size = { 142, 30 };
 	SetConsoleScreenBufferSize(hOut, size);
 	//设置窗口大小
-	SMALL_RECT rc = { 0,0, 142, 30 };
+	SMALL_RECT rc = { 0,0, 141, 29 };
 	SetConsoleWindowInfo(hOut, true, &rc);
 	//设置控制台模式
 	DWORD mode;

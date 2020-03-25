@@ -1,5 +1,5 @@
 #include "car.h"
-#include "gui.h"
+#include "ui.h"
 
 PCAR head, tail;
 
@@ -41,7 +41,7 @@ void load_car()
 void save_car()
 {
 	FILE *fp;
-	if (0 != fopen_s(&fp, "data.dat", "w+b"))
+	if (0 != fopen_s(&fp, "data.dat", "w+"))
 	{
 		perror("打开文件失败，原因是");
 		_getch();
@@ -67,7 +67,7 @@ void add_list(PCAR car)
 		tail = car;
 		return;
 	}
-	while (p != NULL) //按id排列顺序插入
+	while (p != NULL) //否则按id排列顺序插入
 	{
 		if (p->id > car->id)
 		{
@@ -106,19 +106,6 @@ int get_all_car_number()
 		count++;
 	}
 	return count;
-}
-
-PCAR get_car(int car_id)
-{
-	PCAR car = head->rear;
-	do
-	{
-		if (car->id == car_id)
-		{
-			return car;
-		}
-	} while ((car = car->rear) != NULL);
-	return NULL;
 }
 
 int get_id()
