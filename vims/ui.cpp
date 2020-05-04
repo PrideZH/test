@@ -2,7 +2,7 @@
 #include "car.h"
 #include "function.h"
 
-void init_window() 
+void draw_window() 
 {
 	gotoxy(8, 2);
 	printf("╭——————————————————————————————————————————————————————————————╮\n");
@@ -15,7 +15,7 @@ void init_window()
 	printf("╰——————————————————————————————————————————————————————————————╯\n");
 }
 
-void init_popup()
+void draw_popup()
 {
 	gotoxy(43, 11);
 	printf("╭———————————————————————————╮\n");
@@ -30,7 +30,7 @@ void init_popup()
 
 void popup_prompt(const char *information)
 {
-	init_popup();
+	draw_popup();
 	gotoxy(71 - strlen(information) / 2, 13); //使消息居中
 	printf("%s", information);
 	gotoxy(63, 15);
@@ -40,7 +40,7 @@ void popup_prompt(const char *information)
 
 void popup_input(const char *information, int content_lenght)
 {
-	init_popup();
+	draw_popup();
 	gotoxy(71 - (strlen(information) + content_lenght) / 2, 14); //使消息居中
 	printf("%s", information);
 	gotoxy(71 - (content_lenght - strlen(information)) / 2, 14); //在消息后面输入
@@ -86,7 +86,7 @@ void popup_input_float(const char *information, float *content, int content_leng
 	rewind(stdin);
 }
 
-void menu_cursor()
+void draw_menu_button()
 {
 	gotoxy(66, 11);
 	printf("增 添 车 辆");
@@ -96,6 +96,7 @@ void menu_cursor()
 	printf("查 询 车 辆");
 	gotoxy(69, 17);
 	printf("退 出");
+	mouse_pos = Buf.Event.MouseEvent.dwMousePosition; //获得鼠标位置
 	SetConsoleTextAttribute(hOut, CURSOR_COLOR);
 	if (mouse_pos.X > 65 && mouse_pos.X < 77)
 	{
@@ -120,12 +121,37 @@ void menu_cursor()
 		}
 	}
 	SetConsoleTextAttribute(hOut, CONSOLE_COLOR);
+
 	Sleep(1000 / FPS);
 }
 
-void init_set_interface(PCAR car)
+BUTTON menu_click()
 {
-	init_window();
+	ReadConsoleInput(hIn, &Buf, 1, &Result); //读取操作事件
+	while (Buf.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) //鼠标左键点击
+	{
+		if(mouse_pos.X > 65 && mouse_pos.X < 77)
+		{
+			switch (mouse_pos.Y)
+			{
+			case 11: //添加车辆
+				return ADD_BUTTON;
+			case 13: //浏览全部
+				return BROWSE_BUTTON;
+			case 15: //查询车辆
+				return FIND_BUTTON;
+			case 17: //退出
+				return EXIT_BUTTON;
+			}
+		}
+		ReadConsoleInput(hIn, &Buf, 1, &Result); //读取操作事件
+	}
+	return NONE;
+}
+
+void draw_set_windows(PCAR car)
+{
+	draw_window();
 	gotoxy(49, 6);
 	printf("编  号:%d", car->id);
 	gotoxy(49, 8);
@@ -144,10 +170,9 @@ void init_set_interface(PCAR car)
 	printf("颜  色:%s", car->colour);
 	gotoxy(49, 22);
 	printf("价  格:%.2f", car->price);
-	set_cursor();
 }
 
-void set_cursor()
+void draw_set_button()
 {
 	for (int n = 0; n < 16; n+=2)
 	{
@@ -160,6 +185,7 @@ void set_cursor()
 	printf("[确定]");
 	gotoxy(70, 24);
 	printf("[返回]");
+	mouse_pos = Buf.Event.MouseEvent.dwMousePosition; //获得鼠标位置
 	SetConsoleTextAttribute(hOut, CURSOR_COLOR);
 	if (mouse_pos.Y > 7 && mouse_pos.Y < 23 && 0 == mouse_pos.Y%2)
 	{
@@ -191,9 +217,41 @@ void set_cursor()
 	Sleep(1000 / FPS);
 }
 
-void init_browse_interface()
+BUTTON set_click()
 {
-	init_window();
+	ReadConsoleInput(hIn, &Buf, 1, &Result);
+	while (Buf.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) //鼠标左键点击
+	{
+		if (mouse_pos.Y > 7 && mouse_pos.Y < 23 && 0 == mouse_pos.Y % 2)
+		{
+			if (mouse_pos.X > 78 && mouse_pos.X < 85) //输入
+			{
+				return INPUT_BUTTON;
+			}
+			else if (mouse_pos.X > 85 && mouse_pos.X < 92) //清空
+			{
+				return EMPTY_BUTTON;
+			}
+		}
+		else if (24 == mouse_pos.Y)
+		{
+			if (mouse_pos.X > 59 && mouse_pos.X < 66)  //确定
+			{
+				return CONFIRM_BUTTON;
+			}
+			else if (mouse_pos.X > 69 && mouse_pos.X < 76) //返回
+			{
+				return RETURN_BUTTON;
+			}
+		}
+		ReadConsoleInput(hIn, &Buf, 1, &Result);
+	}
+	return NONE;
+}
+
+void draw_browse_windows()
+{
+	draw_window();
 	gotoxy(9, 3);
 	printf("%-4s|%-23s|%-11s|%-11s|%s|%s|%-11s|%-11s|%-15s|%s\n",
 		"编号↓", "        车辆型号", "    厂商", " 车型级别", "座位数—", "排量(L)—", "  变速箱", " 车身颜色", "车辆价格(万)—", "   操作");
@@ -201,11 +259,9 @@ void init_browse_interface()
 	printf("%s", "——————————————————————————————————————————————————————————————");
 	gotoxy(9, 25);
 	printf("%s", "——————————————————————————————————————————————————————————————");
-	gotoxy(60, 26);
-	printf("上一页  [ 1/1 ]  下一页                                      返回");
 }
 
-void browse_cursor(int page_cars_number)
+void draw_browse_button(int page_cars_number)
 {
 	gotoxy(9, 3);
 	printf("编号");
@@ -228,6 +284,8 @@ void browse_cursor(int page_cars_number)
 		gotoxy(129, 5 + n);
 		printf("删除");
 	}
+
+	mouse_pos = Buf.Event.MouseEvent.dwMousePosition; //获得鼠标位置
 	SetConsoleTextAttribute(hOut, CURSOR_COLOR);
 	if (3 == mouse_pos.Y) //排序操作
 	{
@@ -284,7 +342,63 @@ void browse_cursor(int page_cars_number)
 		}
 	}
 	SetConsoleTextAttribute(hOut, CONSOLE_COLOR);
+
 	Sleep(1000 / FPS);
+}
+
+BUTTON browse_click()
+{
+	ReadConsoleInput(hIn, &Buf, 1, &Result); //读取操作事件
+	while (Buf.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) //鼠标左键点击
+	{
+		if (3 == mouse_pos.Y) //排序操作
+		{
+			if (mouse_pos.X > 8 && mouse_pos.X < 13)  //编号
+			{
+				return SORT_ID_BUTTON;
+			}
+			else if (mouse_pos.X > 63 && mouse_pos.X < 70) //座位数
+			{
+				return SORT_SEAT_BUTTON;
+			}
+			else if (mouse_pos.X > 72 && mouse_pos.X < 80) //排量
+			{
+				return SORT_EMISSION_BUTTON;
+			}
+			else if (mouse_pos.X > 106 && mouse_pos.X < 115) //车辆价格
+			{
+				return SORT_PRICE_BUTTON;
+			}
+		}
+		else if (mouse_pos.Y > 4 && mouse_pos.Y < 26 && mouse_pos.Y)
+		{
+			if (mouse_pos.X > 123 && mouse_pos.X < 128) //修改
+			{
+				return SET_BUTTON;
+			}
+			else if (mouse_pos.X > 128 && mouse_pos.X < 133) //删除
+			{
+				return DELETE_BUTTON;
+			}
+		}
+		else if (26 == mouse_pos.Y) //换页和返回操作
+		{
+			if (mouse_pos.X > 59 && mouse_pos.X < 66) //上一页
+			{
+				return PREVIOUS_BUTTON;
+			}
+			else if (mouse_pos.X > 76 && mouse_pos.X < 83) //下一页
+			{
+				return NEXT_BUTTON;
+			}
+			else if (mouse_pos.X > 120 && mouse_pos.X < 125) //返回  
+			{
+				return RETURN_BUTTON;
+			}
+		}
+		ReadConsoleInput(hIn, &Buf, 1, &Result);
+	}
+	return NONE;
 }
 
 void browse_print_cars(PCAR *cars, int page_cars_number, int page)
@@ -293,18 +407,18 @@ void browse_print_cars(PCAR *cars, int page_cars_number, int page)
 	{
 		gotoxy(9, 5 + n % 20);
 		PCAR car = cars[n];
-		printf(" %-5d|%-23s|%-11s|%-11s|  %-6d| %-8.1f|%-11s|%-11s|%-15.2f| 修改 删除 ",
+		printf(" %-5d|%-23s|%-11s|%-11s|  %-6d| %-8.1f|%-11s|%-11s|%-15.2f|",
 			car->id, car->type, car->manufacturer, car->grade, car->seat, car->emission, car->gearbox, car->colour, car->price);
 	}
 }
 
-void update_browse_page(int page, int all_page)
+void draw_browse_page(int page, int all_page)
 {
 	gotoxy(68, 26);
 	printf("[%2d/%-2d]", page + 1, all_page + 1);
 }
 
-void update_browse_sort(int mode)
+void draw_browse_sort(int mode)
 {
 	gotoxy(13, 3);
 	printf("—");
@@ -352,15 +466,14 @@ void update_browse_sort(int mode)
 	}
 }
 
-void init_find_interface()
+void draw_find_windows()
 {
-	init_window();
+	draw_window();
 	gotoxy(64, 3);
 	printf("查询车辆信息");
-	find_cursor();
 }
 
-void find_cursor()
+void draw_find_button()
 {
 	gotoxy(55, 8);
 	printf("[  编  号  ]");
@@ -382,6 +495,8 @@ void find_cursor()
 	printf("[ 车辆价格 ]");
 	gotoxy(75, 20);
 	printf("[  返  回  ]");
+
+	mouse_pos = Buf.Event.MouseEvent.dwMousePosition; //获得鼠标位置
 	SetConsoleTextAttribute(hOut, CURSOR_COLOR);
 	if (mouse_pos.X > 54 && mouse_pos.X < 67)
 	{
@@ -436,23 +551,68 @@ void find_cursor()
 		}
 	}
 	SetConsoleTextAttribute(hOut, CONSOLE_COLOR);
+
 	Sleep(1000 / FPS);
 }
 
-void init_del_interface()
+BUTTON find_click()
 {
-	init_popup();
-	gotoxy(63, 13);
-	printf("是否删除车辆信息");
-	del_cursor();
+	ReadConsoleInput(hIn, &Buf, 1, &Result); //读取操作事件
+	while (Buf.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) //鼠标左键点击
+	{
+		if (mouse_pos.X > 54 && mouse_pos.X < 67)
+		{
+			switch (mouse_pos.Y)
+			{
+			case 8: //编号
+				return FIND_ID_BUTTON;
+			case 11: //厂商
+				return FIND_MANUFACTURER_BUTTON;
+			case 14: //座位数
+				return FIND_SEAT_BUTTON;
+			case 17: //变速箱
+				return FIND_GEARBOX_BUTTON;
+			case 20: //车辆价格
+				return FIND_PRICE_BUTTON;
+			}
+		}
+		else if (mouse_pos.X > 74 && mouse_pos.X < 87)
+		{
+			switch (mouse_pos.Y)
+			{
+			case 8: //车辆型号
+				return FIND_TYPE_BUTTON;
+			case 11: //车型级别
+				return FIND_GRADE_BUTTON;
+			case 14: //排量
+				return FIND_EMISSION_BUTTON;
+			case 17: //车身颜色
+				return FIND_COLOUR_BUTTON;
+			case 20: //返回
+				return RETURN_BUTTON;
+			}
+		}
+		ReadConsoleInput(hIn, &Buf, 1, &Result);
+	}
+	return NONE;
 }
 
-void del_cursor()
+void draw_del_windows()
+{
+	draw_popup();
+	gotoxy(63, 13);
+	printf("是否删除车辆信息");
+	draw_del_button();
+}
+
+void draw_del_button()
 {
 	gotoxy(62, 15);
 	printf("[确定]");
 	gotoxy(74, 15);
 	printf("[取消]");
+
+	mouse_pos = Buf.Event.MouseEvent.dwMousePosition; //获得鼠标位置
 	SetConsoleTextAttribute(hOut, CURSOR_COLOR);
 	if (15 == mouse_pos.Y)
 	{
@@ -471,17 +631,40 @@ void del_cursor()
 	Sleep(1000 / FPS);
 }
 
-void exit_app_interface()
+BUTTON del_click()
 {
-	init_popup();
+	ReadConsoleInput(hIn, &Buf, 1, &Result); //读取操作事件
+	while (Buf.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) //鼠标左键点击
+	{
+		if (15 == mouse_pos.Y)
+		{
+			if (mouse_pos.X > 61 && mouse_pos.X < 68) //确定
+			{
+				return CONFIRM_BUTTON;
+			}
+			else if (mouse_pos.X > 73 && mouse_pos.X < 80) //取消
+			{
+				return RETURN_BUTTON;
+			}
+		}
+		ReadConsoleInput(hIn, &Buf, 1, &Result);
+	}
+	return NONE;
+}
+
+void draw_exit_windows()
+{
+	draw_popup();
 	gotoxy(62, 13);
 	printf("是否退出程序并保存");
 }
 
-void exit_cursor()
+void draw_exit_button()
 {
 	gotoxy(61, 15);
 	printf("[是]   [否]   [取消]");
+
+	mouse_pos = Buf.Event.MouseEvent.dwMousePosition; //获得鼠标位置
 	SetConsoleTextAttribute(hOut, CURSOR_COLOR);
 	if (15 == mouse_pos.Y)
 	{
@@ -502,7 +685,33 @@ void exit_cursor()
 		}
 	}
 	SetConsoleTextAttribute(hOut, CONSOLE_COLOR);
+
 	Sleep(1000 / FPS);
+}
+
+BUTTON exit_click()
+{
+	ReadConsoleInput(hIn, &Buf, 1, &Result); //读取操作事件
+	while (Buf.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) //鼠标左键点击
+	{
+		if (15 == mouse_pos.Y)
+		{
+			if (mouse_pos.X > 60 && mouse_pos.X < 65) //是
+			{
+				return YES;
+			}
+			else if (mouse_pos.X > 67 && mouse_pos.X < 72) //否
+			{
+				return NO;
+			}
+			else if (mouse_pos.X > 74 && mouse_pos.X < 81) //取消
+			{
+				return CANCEL;
+			}
+		}
+		ReadConsoleInput(hIn, &Buf, 1, &Result);
+	}
+	return NONE;
 }
 
 void gotoxy(int x, int y)

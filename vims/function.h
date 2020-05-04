@@ -2,16 +2,11 @@
 
 #include"car.h"
 
-#define UP 72
-#define DOWN 80
-#define LEFT 75
-#define RIGHT 77
-#define SPACE 32
-
-extern HANDLE hIn, hOut;
-extern COORD mouse_pos; //存储鼠标位置
-extern DWORD Result; //存储读取记录
-extern INPUT_RECORD Buf; //存储操作事件
+//#define UP 72
+//#define DOWN 80
+//#define LEFT 75
+//#define RIGHT 77
+//#define SPACE 32
 
 /***********************************************************************
  * 说明：  录入车辆信息功能

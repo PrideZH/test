@@ -5,40 +5,24 @@ void add_car()
 {
 	PCAR car = (PCAR)calloc(1, sizeof(CAR));
 	car->id = get_id(); //获得汽车编号
-	init_set_interface(car);
+	draw_set_windows(car);
 	while (1)
 	{
-		ReadConsoleInput(hIn, &Buf, 1, &Result); //读取操作事件
-		mouse_pos = Buf.Event.MouseEvent.dwMousePosition; //获得鼠标位置
-		set_cursor(); //根据鼠标位置绘制添加车辆界面的光标
-		while (Buf.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) //鼠标左键点击
+		draw_set_button(); //绘制按钮
+		switch (set_click()) 
 		{
-			if (mouse_pos.Y > 7 && mouse_pos.Y < 23 && 0 == mouse_pos.Y % 2)
-			{
-				if (mouse_pos.X > 78 && mouse_pos.X < 85) //输入
-				{
-					car_input(car, mouse_pos.Y); 
-				}
-				else if (mouse_pos.X > 85 && mouse_pos.X < 92) //清空
-				{
-					car_empty(car, mouse_pos.Y);
-					init_set_interface(car);
-				}
-			}
-			else if (24 == mouse_pos.Y)
-			{
-				if (mouse_pos.X > 59 && mouse_pos.X < 66)  //确定
-				{
-					add_list(car);
-					popup_prompt("汽车添加成功...");
-					return;
-				}
-				else if (mouse_pos.X > 69 && mouse_pos.X < 76) //返回
-				{
-					return;
-				}
-			}
-			if (!ReadConsoleInput(hIn, &Buf, 1, &Result)) break;
+		case INPUT_BUTTON: //输入
+			car_input(car, mouse_pos.Y);
+			break;
+		case EMPTY_BUTTON: //清空
+			car_empty(car, mouse_pos.Y);
+			break;
+		case CONFIRM_BUTTON: //确定
+			add_list(car);
+			popup_prompt("汽车添加成功...");
+			return;
+		case RETURN_BUTTON: //返回
+			return;
 		}
 	}
 }
@@ -49,19 +33,15 @@ void car_input(PCAR car, int position)
 	{
 	case 8:
 		popup_input_str("请输入车辆型号:", car->type, MAX_CAR_TYPE);
-		init_set_interface(car);
 		break;
 	case 10:
 		popup_input_str("请输入厂商:", car->manufacturer, MAX_CAR_MANUFACTURER);
-		init_set_interface(car);
 		break;
 	case 12:
 		popup_input_str("请输入车辆级别:", car->grade, MAX_CAR_GRADE);
-		init_set_interface(car);
 		break;
 	case 14:
 		popup_input_int("请输入车辆座位数:", &car->seat, MAX_CAR_SEAT);
-		init_set_interface(car);
 		if (car->seat < 0)
 		{
 			car->seat = 0;
@@ -69,7 +49,6 @@ void car_input(PCAR car, int position)
 		break;
 	case 16:
 		popup_input_float("请输入排量(L):", &car->emission, MAX_CAR_EMISSION );
-		init_set_interface(car);
 		if (car->emission < 0)
 		{
 			car->emission = 0;
@@ -77,23 +56,19 @@ void car_input(PCAR car, int position)
 		break;
 	case 18:
 		popup_input_str("请输入车辆变速箱:", car->gearbox, MAX_CAR_GEARBOX);
-		init_set_interface(car);
 		break;
 	case 20:
 		popup_input_str("请输入车身颜色:", car->colour, MAX_CAR_COLOUR);
-		init_set_interface(car);
 		break;
 	case 22:
 		popup_input_float("请输入车辆价格(万):", &car->price, MAX_CAR_PRICE);
-		init_set_interface(car);
 		if (car->price < 0)
 		{
 			car->price = 0;
 		}
 		break;
 	}
-	rewind(stdin);
-	init_set_interface(car);
+	draw_set_windows(car);
 }
 
 void car_empty(PCAR car, int position)
@@ -125,6 +100,7 @@ void car_empty(PCAR car, int position)
 		car->price = 0;
 		break;
 	}
+	draw_set_windows(car);
 }
 
 void browse_cars(PCAR *cars, int cars_number)
@@ -144,106 +120,70 @@ void browse_cars(PCAR *cars, int cars_number)
 	int page = 0; //当前页数
 	int all_page = (cars_number - 1) / 20; //计算总页数
 	int page_cars_number = page == all_page ? cars_number - page * 20 : 20; //计算当前页汽车数量
-	init_browse_interface(); //绘制浏览车辆界面
-	update_browse_page(page, all_page); //页数信息显示
-	browse_print_cars(cars, page_cars_number, page); //显示第一页车辆
+	draw_browse_windows(); //绘制浏览车辆界面
 	while (1)
 	{
-		ReadConsoleInput(hIn, &Buf, 1, &Result); //读取操作事件
-		mouse_pos = Buf.Event.MouseEvent.dwMousePosition; //获得鼠标位置
-		browse_cursor(page_cars_number); //根据鼠标位置绘制菜单光标
-		while (Buf.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) //鼠标左键点击
+		draw_browse_page(page, all_page); //页数信息显示
+		draw_browse_sort(mode); //更新排序方式显示信息
+		browse_print_cars(cars, page_cars_number, page); //显示第一页车辆
+		draw_browse_button(page_cars_number); //绘制按钮
+		switch (browse_click())
 		{
-			if (3 == mouse_pos.Y) //排序操作
+		case SORT_ID_BUTTON: //编号排序
+			browse_qsort(cars, 0, cars_number - 1, mode = !(mode % 2));
+			break;
+		case SORT_SEAT_BUTTON: //座位数排序
+			browse_qsort(cars, 0, cars_number - 1, mode = !(mode % 2) + 2);
+			break;
+		case SORT_EMISSION_BUTTON: //排量排序
+			browse_qsort(cars, 0, cars_number - 1, mode = !(mode % 2) + 4);
+			break;
+		case SORT_PRICE_BUTTON: //价格排序
+			browse_qsort(cars, 0, cars_number - 1, mode = !(mode % 2) + 6);
+			break;
+		case SET_BUTTON: //修改
+			if (mouse_pos.Y < 5 + page_cars_number)
 			{
-				if (mouse_pos.X > 8 && mouse_pos.X < 13)  //编号
+				set_car(cars[mouse_pos.Y - 5 + page * 20]);
+			}
+			draw_browse_windows();
+			break;
+		case DELETE_BUTTON: //删除
+			if (mouse_pos.Y < 5 + page_cars_number)
+			{
+				int position = mouse_pos.Y - 5 + page * 20;
+				if (del_car(cars[position])) //删除成功时去除此车辆下标
 				{
-					browse_qsort(cars, 0, cars_number - 1, mode = !(mode % 2));
-					browse_print_cars(cars, page_cars_number, page); //显示车辆
-					update_browse_sort(mode); //更新排序方式显示信息
-				}
-				else if (mouse_pos.X > 63 && mouse_pos.X < 70) //座位数
-				{
-					browse_qsort(cars, 0, cars_number - 1, mode = !(mode % 2) + 2);
-					browse_print_cars(cars, page_cars_number, page); //显示车辆
-					update_browse_sort(mode); //更新排序方式显示信息
-				}
-				else if (mouse_pos.X > 72 && mouse_pos.X < 80) //排量
-				{
-					browse_qsort(cars, 0, cars_number - 1, mode = !(mode % 2) + 4);
-					browse_print_cars(cars, page_cars_number, page); //显示车辆
-					update_browse_sort(mode); //更新排序方式显示信息
-				}
-				else if (mouse_pos.X > 106 && mouse_pos.X < 115) //车辆价格
-				{
-					browse_qsort(cars, 0, cars_number - 1, mode = !(mode % 2) + 6);
-					browse_print_cars(cars, page_cars_number, page); //显示车辆
-					update_browse_sort(mode); //更新排序方式显示信息
+					for (int j = position; j < cars_number; j++)
+					{
+						cars[j] = cars[j + 1];
+					}
+					if (0 == --cars_number) return; //没有车辆时返回上一菜单
+					all_page = (cars_number - 1) / 20; //计算总页数
+					if (page > all_page) page--; //如果当前页无车辆时，转到上一页
+					page_cars_number = page == all_page ? cars_number - page * 20 : 20; //计算当前页汽车数量
 				}
 			}
-			else if (mouse_pos.Y > 4 && mouse_pos.Y < 26 && mouse_pos.Y < 5 + page_cars_number)
+			draw_browse_windows();
+			break;
+		case PREVIOUS_BUTTON: //上一页
+			if (page > 0)
 			{
-				if (mouse_pos.X > 123 && mouse_pos.X < 128) //修改
-				{
-					set_car(cars[mouse_pos.Y - 5 + page * 20]);
-					init_browse_interface();
-					update_browse_page(page, all_page); //更新页数显示
-					update_browse_sort(mode); //更新排序方式显示信息
-					browse_print_cars(cars, page_cars_number, page); //显示车辆
-				}
-				else if (mouse_pos.X > 128 && mouse_pos.X < 133) //删除
-				{
-					int position = mouse_pos.Y - 5 + page * 20;
-					if (del_car(cars[position])) //删除成功时去除此车辆下标
-					{
-						for (int j = position; j < cars_number; j++)
-						{
-							cars[j] = cars[j + 1];
-						}
-						if (0 == --cars_number) return; //没有车辆时返回上一菜单
-						init_browse_interface();
-						all_page = (cars_number - 1) / 20; //计算总页数
-						if (page > all_page) page--; //如果当前页无车辆时，转到上一页
-						page_cars_number = page == all_page ? cars_number - page * 20 : 20; //计算当前页汽车数量
-					}
-					init_browse_interface();
-					update_browse_page(page, all_page); //更新页数显示
-					update_browse_sort(mode); //更新排序方式显示信息
-					browse_print_cars(cars, page_cars_number, page); //显示车辆
-				}
+				page--;
+				draw_browse_windows();
+				page_cars_number = page == all_page ? cars_number - page * 20 : 20; //计算当前页汽车数量
 			}
-			else if (26 == mouse_pos.Y) //换页和返回操作
+			break;
+		case NEXT_BUTTON: //下一页
+			if (page < all_page)
 			{
-				if (mouse_pos.X > 59 && mouse_pos.X < 66) //上一页
-				{
-					if (page > 0)
-					{
-						page--;
-						init_browse_interface();
-						page_cars_number = page == all_page ? cars_number - page * 20 : 20; //计算当前页汽车数量
-						browse_print_cars(cars, page_cars_number, page); //显示车辆
-						update_browse_page(page, all_page); //更新页数显示
-						update_browse_sort(mode); //更新排序方式显示信息
-					}
-				}
-				else if (mouse_pos.X > 76 && mouse_pos.X < 83) //下一页
-				{
-					if (page < all_page)
-					{
-						page++;
-						init_browse_interface();
-						page_cars_number = page == all_page ? cars_number - page * 20 : 20; //计算当前页汽车数量
-						browse_print_cars(cars, page_cars_number, page); //显示车辆
-						update_browse_page(page, all_page); //更新页数显示
-						update_browse_sort(mode); //更新排序方式显示信息
-					}
-				}
-				else if (mouse_pos.X > 120 && mouse_pos.X < 125) //返回  
-				{
-					return;
-				}
+				page++;
+				draw_browse_windows();
+				page_cars_number = page == all_page ? cars_number - page * 20 : 20; //计算当前页汽车数量
 			}
-			if (!ReadConsoleInput(hIn, &Buf, 1, &Result)) break;
+			break;
+		case RETURN_BUTTON: //返回
+			return;
 		}
 	}
 }
@@ -401,103 +341,88 @@ void find_car()
 	float input_f;
 	char input_s[24];
 	PCAR *cars = (PCAR *)malloc(get_all_car_number() * sizeof(PCAR)); 
-	init_find_interface();
+	draw_find_windows();
 	while (1)
 	{
 		PCAR car = head->rear;
 		int cars_number = 0;
-		ReadConsoleInput(hIn, &Buf, 1, &Result); //读取操作事件
-		mouse_pos = Buf.Event.MouseEvent.dwMousePosition; //获得鼠标位置
-		find_cursor(); //根据鼠标位置绘制查询车辆的光标
-		while (Buf.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) //鼠标左键点击
+		draw_find_button(); //绘制按钮
+		switch (find_click()) //判断鼠标点击
 		{
-			if (mouse_pos.X > 54 && mouse_pos.X < 67)
-			{
-				switch (mouse_pos.Y) 
-				{
-				case 8: //编号
-					popup_input_int("请输入编号:", &input_i, 4);
-					do {
-						if (car->id == input_i) cars[cars_number++] = car;
-					} while ((car = car->rear) != NULL);
-					browse_cars(cars, cars_number);
-					init_find_interface();
-					break;
-				case 11: //厂商
-					popup_input_str("请输入厂商:", input_s, MAX_CAR_MANUFACTURER);
-					do {
-						if (!strcmp(car->type, input_s)) cars[cars_number++] = car;
-					} while ((car = car->rear) != NULL);
-					browse_cars(cars, cars_number);
-					init_find_interface();
-					break;
-				case 14: //座位数
-					popup_input_int("请输入座位数:", &input_i, MAX_CAR_SEAT);
-					do {
-						if (car->seat == input_i) cars[cars_number++] = car;
-					} while ((car = car->rear) != NULL);
-					browse_cars(cars, cars_number);
-					init_find_interface();
-					break;
-				case 17: //变速箱
-					popup_input_str("请输入变速箱:", input_s, MAX_CAR_GEARBOX);
-					do {
-						if (!strcmp(car->gearbox, input_s)) cars[cars_number++] = car;
-					} while ((car = car->rear) != NULL);
-					browse_cars(cars, cars_number);
-					init_find_interface();
-					break;
-				case 20: //车辆价格
-					popup_input_float("请输入车辆价格:", &input_f, MAX_CAR_PRICE);
-					do {
-						if (car->price == input_f) cars[cars_number++] = car;
-					} while ((car = car->rear) != NULL);
-					browse_cars(cars, cars_number);
-					init_find_interface();
-					break;
-				}
-			}
-			else if (mouse_pos.X > 74 && mouse_pos.X < 87)
-			{
-				switch (mouse_pos.Y)
-				{
-				case 8: //车辆型号
-					popup_input_str("请输入车辆型号:", input_s, MAX_CAR_TYPE);
-					do {
-						if (!strcmp(car->type, input_s)) cars[cars_number++] = car;
-					} while ((car = car->rear) != NULL);
-					browse_cars(cars, cars_number);
-					init_find_interface();
-					break;
-				case 11: //车型级别
-					popup_input_str("请输入车型级别:", input_s, MAX_CAR_GRADE);
-					do {
-						if (!strcmp(car->grade, input_s)) cars[cars_number++] = car;
-					} while ((car = car->rear) != NULL);
-					browse_cars(cars, cars_number);
-					init_find_interface();
-					break;
-				case 14: //排量
-					popup_input_float("请输入排量:", &input_f, MAX_CAR_EMISSION);
-					do {
-						if (car->emission == input_f) cars[cars_number++] = car;
-					} while ((car = car->rear) != NULL);
-					browse_cars(cars, cars_number);
-					init_find_interface();
-					break;
-				case 17: //车身颜色
-					popup_input_str("请输入车身颜色:", input_s, MAX_CAR_COLOUR);
-					do {
-						if (!strcmp(car->colour, input_s)) cars[cars_number++] = car;
-					} while ((car = car->rear) != NULL);
-					browse_cars(cars, cars_number);
-					init_find_interface();
-					break;
-				case 20: //返回
-					return;
-				}
-			}
-			if (!ReadConsoleInput(hIn, &Buf, 1, &Result)) break;
+		case FIND_ID_BUTTON: //编号
+			popup_input_int("请输入编号:", &input_i, 4);
+			do {
+				if (car->id == input_i) cars[cars_number++] = car;
+			} while ((car = car->rear) != NULL);
+			browse_cars(cars, cars_number);
+			draw_find_windows();
+			break;
+		case FIND_MANUFACTURER_BUTTON: //厂商
+			popup_input_str("请输入厂商:", input_s, MAX_CAR_MANUFACTURER);
+			do {
+				if (!strcmp(car->type, input_s)) cars[cars_number++] = car;
+			} while ((car = car->rear) != NULL);
+			browse_cars(cars, cars_number);
+			draw_find_windows();
+			break;
+		case FIND_SEAT_BUTTON: //查询车辆
+			popup_input_int("请输入座位数:", &input_i, MAX_CAR_SEAT);
+			do {
+				if (car->seat == input_i) cars[cars_number++] = car;
+			} while ((car = car->rear) != NULL);
+			browse_cars(cars, cars_number);
+			draw_find_windows();
+			break;
+		case FIND_GEARBOX_BUTTON: //变速箱
+			popup_input_str("请输入变速箱:", input_s, MAX_CAR_GEARBOX);
+			do {
+				if (!strcmp(car->gearbox, input_s)) cars[cars_number++] = car;
+			} while ((car = car->rear) != NULL);
+			browse_cars(cars, cars_number);
+			draw_find_windows();
+			break;
+		case FIND_PRICE_BUTTON: //车辆价格
+			popup_input_float("请输入车辆价格:", &input_f, MAX_CAR_PRICE);
+			do {
+				if (car->price == input_f) cars[cars_number++] = car;
+			} while ((car = car->rear) != NULL);
+			browse_cars(cars, cars_number);
+			draw_find_windows();
+			break;
+		case FIND_TYPE_BUTTON: //车辆型号
+			popup_input_str("请输入车辆型号:", input_s, MAX_CAR_TYPE);
+			do {
+				if (!strcmp(car->type, input_s)) cars[cars_number++] = car;
+			} while ((car = car->rear) != NULL);
+			browse_cars(cars, cars_number);
+			draw_find_windows();
+			break;
+		case FIND_GRADE_BUTTON: //车型级别
+			popup_input_str("请输入车型级别:", input_s, MAX_CAR_GRADE);
+			do {
+				if (!strcmp(car->grade, input_s)) cars[cars_number++] = car;
+			} while ((car = car->rear) != NULL);
+			browse_cars(cars, cars_number);
+			draw_find_windows();
+			break;
+		case FIND_EMISSION_BUTTON: //排量
+			popup_input_float("请输入排量:", &input_f, MAX_CAR_EMISSION);
+			do {
+				if (car->emission == input_f) cars[cars_number++] = car;
+			} while ((car = car->rear) != NULL);
+			browse_cars(cars, cars_number);
+			draw_find_windows();
+			break;
+		case FIND_COLOUR_BUTTON: //车身颜色
+			popup_input_str("请输入车身颜色:", input_s, MAX_CAR_COLOUR);
+			do {
+				if (!strcmp(car->colour, input_s)) cars[cars_number++] = car;
+			} while ((car = car->rear) != NULL);
+			browse_cars(cars, cars_number);
+			draw_find_windows();
+			break;
+		case RETURN_BUTTON: //返回
+			return;
 		}
 	}
 }
@@ -505,99 +430,62 @@ void find_car()
 void set_car(PCAR car)
 {
 	CAR car_inof = *car; //获得要修改的车信息
-	init_set_interface(&car_inof);
+	draw_set_windows(&car_inof);
 	while (1)
 	{
-		ReadConsoleInput(hIn, &Buf, 1, &Result); //读取操作事件
-		mouse_pos = Buf.Event.MouseEvent.dwMousePosition; //获得鼠标位置
-		set_cursor(); //根据鼠标位置绘制添加车辆界面的光标
-		while (Buf.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) //鼠标左键点击
+		draw_set_button(); //根据鼠标位置绘制添加车辆界面的光标
+		switch (set_click())
 		{
-			if (mouse_pos.Y > 7 && mouse_pos.Y < 23 && 0 == mouse_pos.Y % 2)
-			{
-				if (mouse_pos.X > 78 && mouse_pos.X < 85) //输入
-				{
-					car_input(&car_inof, mouse_pos.Y);
-				}
-				else if (mouse_pos.X > 85 && mouse_pos.X < 92) //清空
-				{
-					car_empty(&car_inof, mouse_pos.Y);
-					init_set_interface(&car_inof);
-				}
-			}
-			else if (24 == mouse_pos.Y)
-			{
-				if (mouse_pos.X > 59 && mouse_pos.X < 66)  //确定
-				{
-					*car = car_inof;
-					popup_prompt("汽车修改成功...");
-					return;
-				}
-				else if (mouse_pos.X > 69 && mouse_pos.X < 76) //返回
-				{
-					return;
-				}
-			}
-			if (!ReadConsoleInput(hIn, &Buf, 1, &Result)) break;
+		case INPUT_BUTTON: //输入
+			car_input(&car_inof, mouse_pos.Y);
+			break;
+		case EMPTY_BUTTON: //清空
+			car_empty(&car_inof, mouse_pos.Y);
+			draw_set_windows(&car_inof);
+			break;
+		case CONFIRM_BUTTON: //确定
+			*car = car_inof;
+			popup_prompt("汽车修改成功...");
+			return;
+		case RETURN_BUTTON: //返回
+			return;
 		}
 	}
 }
 
 int del_car(PCAR car)
 {
-	init_del_interface();
+	draw_del_windows();
 	while (1)
 	{
-		ReadConsoleInput(hIn, &Buf, 1, &Result); //读取操作事件
-		mouse_pos = Buf.Event.MouseEvent.dwMousePosition; //获得鼠标位置
-		del_cursor(); //根据鼠标位置绘制添加车辆界面的光标
-		while (Buf.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) //鼠标左键点击
+		draw_del_button(); //绘制按钮
+		switch(del_click())
 		{
-			if (15 == mouse_pos.Y)
-			{
-				if (mouse_pos.X > 61 && mouse_pos.X < 68) //确定
-				{
-					del_list(car);
-					popup_prompt("删除车辆成功...");
-					return 1;
-				}
-				else if (mouse_pos.X > 73 && mouse_pos.X < 80) //取消
-				{
-					return 0;
-				}
-			}
-			if (!ReadConsoleInput(hIn, &Buf, 1, &Result)) break;
+		case CONFIRM_BUTTON: //确定
+			del_list(car);
+			popup_prompt("删除车辆成功...");
+			return 1;
+		case RETURN_BUTTON: //取消
+			return 0;
 		}
 	}
 }
 
 int exit_app()
 {
-	exit_app_interface();
+	draw_exit_windows();
 	while (1)
 	{
-		ReadConsoleInput(hIn, &Buf, 1, &Result); //读取操作事件
-		mouse_pos = Buf.Event.MouseEvent.dwMousePosition; //获得鼠标位置
-		exit_cursor();
-		while (Buf.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) //鼠标左键点击
+		draw_exit_button();
+		switch (exit_click())
 		{
-			if (15 == mouse_pos.Y)
-			{
-				if (mouse_pos.X > 60 && mouse_pos.X < 65) //是
-				{
-					save_car();
-					return 1;
-				}
-				else if (mouse_pos.X > 67 && mouse_pos.X < 72) //否
-				{
-					return 1;
-				}
-				else if (mouse_pos.X > 74 && mouse_pos.X < 81) //取消
-				{
-					return 0;
-				}
-			}
-			if (!ReadConsoleInput(hIn, &Buf, 1, &Result)) break;
+		case YES: //是
+			save_car();
+			return 1;
+		case NO: //否
+			return 1;
+		case CANCEL: //取消
+			return 0;
 		}
 	}
 	return 0;
