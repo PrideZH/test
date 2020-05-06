@@ -18,19 +18,19 @@ int main()
 		switch (menu_click()) //判断鼠标点击
 		{
 		case ADD_BUTTON: //添加车辆
-			add_car();
+			add_car_fun();
 			draw_window();
 			break;
 		case BROWSE_BUTTON: //浏览全部
-			browse_cars(NULL, get_all_car_number());
+			browse_car_fun(head);
 			draw_window();
 			break;
 		case FIND_BUTTON: //查询车辆
-			find_car();
+			find_car_fun();
 			draw_window();
 			break;
 		case EXIT_BUTTON: //退出
-			if (exit_app()) return 0;	
+			if (exit_fun()) return 0;	
 			draw_window();
 		}
 	}
@@ -51,11 +51,11 @@ void init()
 	SMALL_RECT rc = { 0,0, 141, 29 };
 	SetConsoleWindowInfo(hOut, true, &rc);
 	//设置控制台模式
-	DWORD mode;
-	GetConsoleMode(hIn, &mode);
-	mode &= ~ENABLE_QUICK_EDIT_MODE; //移除快速编辑模式
-	mode &= ~ENABLE_INSERT_MODE; //移除插入模式
-	SetConsoleMode(hIn, mode);
+	DWORD sort_mode;
+	GetConsoleMode(hIn, &sort_mode);
+	sort_mode &= ~ENABLE_QUICK_EDIT_MODE; //移除快速编辑模式
+	sort_mode &= ~ENABLE_INSERT_MODE; //移除插入模式
+	SetConsoleMode(hIn, sort_mode);
 	//隐藏光标
 	CONSOLE_CURSOR_INFO CursorInfo;
 	GetConsoleCursorInfo(hOut, &CursorInfo);//光标信息

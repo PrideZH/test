@@ -401,14 +401,22 @@ BUTTON browse_click()
 	return NONE;
 }
 
-void browse_print_cars(PCAR *cars, int page_cars_number, int page)
+void browse_print_cars(PCAR head, int page)
 {
-	for (int n = page * 20; n < page_cars_number + page * 20; n++)
+	//获得指定页面第一俩车
+	PCAR car = head->rear;
+	for (int i = 0; i < page * 20; i++) 
 	{
+		car = car->rear;
+	}
+	//打印该页面车辆
+	for (int n = 0; n < 20; n++)
+	{
+		if (car == NULL) break;
 		gotoxy(9, 5 + n % 20);
-		PCAR car = cars[n];
 		printf(" %-5d|%-23s|%-11s|%-11s|  %-6d| %-8.1f|%-11s|%-11s|%-15.2f|",
 			car->id, car->type, car->manufacturer, car->grade, car->seat, car->emission, car->gearbox, car->colour, car->price);
+		car = car->rear;
 	}
 }
 
@@ -418,7 +426,7 @@ void draw_browse_page(int page, int all_page)
 	printf("[%2d/%-2d]", page + 1, all_page + 1);
 }
 
-void draw_browse_sort(int mode)
+void draw_browse_sort(int sort_mode)
 {
 	gotoxy(13, 3);
 	printf("—");
@@ -428,7 +436,7 @@ void draw_browse_sort(int mode)
 	printf("—");
 	gotoxy(119, 3);
 	printf("—");
-	switch (mode)
+	switch (sort_mode)
 	{
 	case 0:
 		gotoxy(13, 3);
