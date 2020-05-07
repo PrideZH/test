@@ -41,7 +41,7 @@ void load_car()
 void save_car()
 {
 	FILE *fp;
-	if (0 != fopen_s(&fp, "data.dat", "w+"))
+	if (0 != fopen_s(&fp, "data.dat", "w+b"))
 	{
 		perror("打开文件失败，原因是");
 		_getch();
