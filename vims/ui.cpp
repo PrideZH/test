@@ -8,12 +8,16 @@ BYTTON_INFO browse_but = { 66, 13, 10, "浏 览 全 部" };
 BYTTON_INFO find_but = { 66, 15, 10, "查 询 车 辆" };
 BYTTON_INFO exit_but = { 69, 17, 4, "退 出" };
 BYTTON_INFO input_but[] = { 
-	{ 79, 8, 5, "[输入]" }, { 79, 10, 5, "[输入]" }, { 79, 12, 5, "[输入]" }, { 79, 14, 5, "[输入]" },
-	{ 79, 16, 5, "[输入]" }, { 79, 18, 5, "[输入]" }, { 79, 20, 5, "[输入]" }, { 79, 22, 5, "[输入]" }
+	{ 79, 8, 5, "[输入]" }, { 79, 10, 5, "[输入]" }, 
+	{ 79, 12, 5, "[输入]" }, { 79, 14, 5, "[输入]" },
+	{ 79, 16, 5, "[输入]" }, { 79, 18, 5, "[输入]" }, 
+	{ 79, 20, 5, "[输入]" }, { 79, 22, 5, "[输入]" }
 };
 BYTTON_INFO empty_but[] = { 
-	{ 86, 8, 5, "[清空]" }, { 86, 10, 5, "[清空]" }, { 86, 12, 5, "[清空]" }, { 86, 14, 5, "[清空]" },
-	{ 86, 16, 5, "[清空]" }, { 86, 18, 5, "[清空]" }, { 86, 20, 5, "[清空]" }, { 86, 22, 5, "[清空]" }
+	{ 86, 8, 5, "[清空]" }, { 86, 10, 5, "[清空]" }, 
+	{ 86, 12, 5, "[清空]" }, { 86, 14, 5, "[清空]" },
+	{ 86, 16, 5, "[清空]" }, { 86, 18, 5, "[清空]" }, 
+	{ 86, 20, 5, "[清空]" }, { 86, 22, 5, "[清空]" }
 };
 //添加界面按钮
 BYTTON_INFO set_confirm_but = { 60, 24, 5, "[确定]" };
@@ -27,18 +31,28 @@ BYTTON_INFO next_but = { 77, 26, 5, "下一页" };
 BYTTON_INFO previous_but = { 60, 26, 5, "上一页" };
 BYTTON_INFO browse_return_but = { 121, 26, 3, "返回" };
 BYTTON_INFO set_but[] = { 
-	{ 124, 5, 3, "修改" }, { 124, 6, 3, "修改" }, { 124, 7, 3, "修改" }, { 124, 8, 3, "修改" },
-	{ 124, 9, 3, "修改" }, { 124, 10, 3, "修改" }, { 124, 11, 3, "修改" }, { 124, 12, 3, "修改" },
-	{ 124, 13, 3, "修改" }, { 124, 14, 3, "修改" }, { 124, 15, 3, "修改" }, { 124, 16, 3, "修改" },
-	{ 124, 17, 3, "修改" }, { 124, 18, 3, "修改" }, { 124, 19, 3, "修改" }, { 124, 20, 3, "修改" },
-	{ 124, 21, 3, "修改" }, { 124, 22, 3, "修改" }, { 124, 23, 3, "修改" }, { 124, 24, 3, "修改" }
+	{ 124, 5, 3, "修改" }, { 124, 6, 3, "修改" }, 
+	{ 124, 7, 3, "修改" }, { 124, 8, 3, "修改" },
+	{ 124, 9, 3, "修改" }, { 124, 10, 3, "修改" },
+	{ 124, 11, 3, "修改" }, { 124, 12, 3, "修改" },
+	{ 124, 13, 3, "修改" }, { 124, 14, 3, "修改" }, 
+	{ 124, 15, 3, "修改" }, { 124, 16, 3, "修改" },
+	{ 124, 17, 3, "修改" }, { 124, 18, 3, "修改" }, 
+	{ 124, 19, 3, "修改" }, { 124, 20, 3, "修改" },
+	{ 124, 21, 3, "修改" }, { 124, 22, 3, "修改" }, 
+	{ 124, 23, 3, "修改" }, { 124, 24, 3, "修改" }
 };
 BYTTON_INFO del_but[] = { 
-	{ 129, 5, 3, "删除" }, { 129, 6, 3, "删除" }, { 129, 7, 3, "删除" }, { 129, 8, 3, "删除" },
-	{ 129, 9, 3, "删除" }, { 129, 10, 3, "删除" }, { 129, 11, 3, "删除" }, { 129, 12, 3, "删除" },
-	{ 129, 13, 3, "删除" }, { 129, 14, 3, "删除" }, { 129, 15, 3, "删除" }, { 129, 16, 3, "删除" },
-	{ 129, 17, 3, "删除" }, { 129, 18, 3, "删除" }, { 129, 19, 3, "删除" }, { 129, 20, 3, "删除" },
-	{ 129, 21, 3, "删除" }, { 129, 22, 3, "删除" }, { 129, 23, 3, "删除" }, { 129, 24, 3, "删除" }
+	{ 129, 5, 3, "删除" }, { 129, 6, 3, "删除" }, 
+	{ 129, 7, 3, "删除" }, { 129, 8, 3, "删除" },
+	{ 129, 9, 3, "删除" }, { 129, 10, 3, "删除" }, 
+	{ 129, 11, 3, "删除" }, { 129, 12, 3, "删除" },
+	{ 129, 13, 3, "删除" }, { 129, 14, 3, "删除" }, 
+	{ 129, 15, 3, "删除" }, { 129, 16, 3, "删除" },
+	{ 129, 17, 3, "删除" }, { 129, 18, 3, "删除" }, 
+	{ 129, 19, 3, "删除" }, { 129, 20, 3, "删除" },
+	{ 129, 21, 3, "删除" }, { 129, 22, 3, "删除" }, 
+	{ 129, 23, 3, "删除" }, { 129, 24, 3, "删除" }
 };
 //查询界面按钮
 BYTTON_INFO find_id_but = { 55, 8, 11, "[  编  号  ]" };
@@ -147,10 +161,22 @@ void draw_menu_button()
 	//绘制按钮光标
 	mouse_pos = Buf.Event.MouseEvent.dwMousePosition; //获得鼠标位置
 	SetConsoleTextAttribute(hOut, CURSOR_COLOR);
-	if(is_in_button(add_but)) draw_button(add_but); //绘制 [增 添 车 辆]
-	else if (is_in_button(browse_but)) draw_button(browse_but); //绘制 [浏 览 全 部]
-	else if (is_in_button(find_but)) draw_button(find_but); //绘制 [查 询 车 辆]
-	else if (is_in_button(exit_but)) draw_button(exit_but); //绘制 [退 出]
+	if (is_in_button(add_but))
+	{
+		draw_button(add_but); //绘制 [增 添 车 辆]
+	}
+	else if (is_in_button(browse_but)) 
+	{
+		draw_button(browse_but); //绘制 [浏 览 全 部]
+	}
+	else if (is_in_button(find_but)) 
+	{
+		draw_button(find_but); //绘制 [查 询 车 辆]
+	}
+	else if (is_in_button(exit_but)) 
+	{
+		draw_button(exit_but);  //绘制 [退 出]
+	}
 	SetConsoleTextAttribute(hOut, CONSOLE_COLOR);
 
 	Sleep(1000 / FPS);
@@ -161,10 +187,22 @@ BUTTON menu_click()
 	ReadConsoleInput(hIn, &Buf, 1, &Result); //读取操作事件
 	while (Buf.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) //鼠标左键点击
 	{
-		if (is_in_button(add_but)) return ADD_BUTTON; //添加车辆
-		else if (is_in_button(browse_but)) return BROWSE_BUTTON; //浏览全部
-		else if (is_in_button(find_but)) return FIND_BUTTON; //查询车辆
-		else if (is_in_button(exit_but)) return EXIT_BUTTON; //退出
+		if (is_in_button(add_but))
+		{
+			return ADD_BUTTON; //添加车辆
+		}
+		else if (is_in_button(browse_but))
+		{
+			return BROWSE_BUTTON; //浏览全部
+		}
+		else if (is_in_button(find_but))
+		{
+			return FIND_BUTTON; //查询车辆
+		}
+		else if (is_in_button(exit_but))
+		{
+			return EXIT_BUTTON; //退出
+		}
 		ReadConsoleInput(hIn, &Buf, 1, &Result); //读取操作事件
 	}
 	return NONE;
@@ -199,11 +237,23 @@ void draw_set_button()
 	SetConsoleTextAttribute(hOut, CURSOR_COLOR);
 	for (int i = 0; i < 8; i++)
 	{
-		if (is_in_button(input_but[i])) draw_button(input_but[i]); //绘制 [输入]
-		else if (is_in_button(empty_but[i])) draw_button(empty_but[i]); //绘制 [清空]
+		if (is_in_button(input_but[i]))
+		{
+			draw_button(input_but[i]); //绘制 [输入]
+		}
+		else if (is_in_button(empty_but[i]))
+		{
+			draw_button(empty_but[i]); //绘制 [清空]
+		}
 	}
-	if (is_in_button(set_confirm_but)) draw_button(set_confirm_but); //绘制 [确定]
-	else if (is_in_button(set_return_but)) draw_button(set_return_but); //绘制 [返回]
+	if (is_in_button(set_confirm_but))
+	{
+		draw_button(set_confirm_but); //绘制 [确定]
+	}
+	else if (is_in_button(set_return_but))
+	{
+		draw_button(set_return_but); //绘制 [返回]
+	}
 	SetConsoleTextAttribute(hOut, CONSOLE_COLOR);
 	Sleep(1000 / FPS);
 }
@@ -215,11 +265,23 @@ BUTTON set_click()
 	{
 		for (int i = 0; i < 8; i++)
 		{
-			if (is_in_button(input_but[i])) return BUTTON(INPUT_BUTTON_0 + i); //输入
-			else if (is_in_button(empty_but[i])) return BUTTON(EMPTY_BUTTON_0 + i); //清空
+			if (is_in_button(input_but[i]))
+			{
+				return BUTTON(INPUT_BUTTON_0 + i); //输入
+			}
+			else if (is_in_button(empty_but[i]))
+			{
+				return BUTTON(EMPTY_BUTTON_0 + i); //清空
+			}
 		}
-		if (is_in_button(set_confirm_but)) return CONFIRM_BUTTON; //确定
-		else if (is_in_button(set_return_but)) return RETURN_BUTTON; //返回
+		if (is_in_button(set_confirm_but))
+		{
+			return CONFIRM_BUTTON; //确定
+		}
+		else if (is_in_button(set_return_but))
+		{
+			return RETURN_BUTTON; //返回
+		}
 		ReadConsoleInput(hIn, &Buf, 1, &Result);
 	}
 	return NONE;
@@ -255,17 +317,44 @@ void draw_browse_button(int page_cars_number)
 	//绘制按钮光标
 	mouse_pos = Buf.Event.MouseEvent.dwMousePosition; //获得鼠标位置
 	SetConsoleTextAttribute(hOut, CURSOR_COLOR);
-	if (is_in_button(id_but)) draw_button(id_but); //绘制 [编号]
-	else if (is_in_button(seat_but)) draw_button(seat_but); //绘制 [座位数]
-	else if (is_in_button(emission_but)) draw_button(emission_but); //绘制 [排量(L)]
-	else if (is_in_button(price_but)) draw_button(price_but); //绘制 [车辆价格(万)]
-	else if (is_in_button(next_but)) draw_button(next_but); //绘制 [下一页]
-	else if (is_in_button(previous_but)) draw_button(previous_but); //绘制 [上一页]
-	else if (is_in_button(browse_return_but)) draw_button(browse_return_but); //绘制 [返回]
+	if (is_in_button(id_but))
+	{
+		draw_button(id_but); //绘制 [编号]
+	}
+	else if (is_in_button(seat_but))
+	{
+		draw_button(seat_but); //绘制 [座位数]
+	}
+	else if (is_in_button(emission_but))
+	{
+		draw_button(emission_but); //绘制 [排量(L)]
+	}
+	else if (is_in_button(price_but))
+	{
+		draw_button(price_but); //绘制 [车辆价格(万)]
+	}
+	else if (is_in_button(next_but))
+	{
+		draw_button(next_but); //绘制 [下一页]
+	}
+	else if (is_in_button(previous_but))
+	{
+		draw_button(previous_but); //绘制 [上一页]
+	}
+	else if (is_in_button(browse_return_but))
+	{
+		draw_button(browse_return_but); //绘制 [返回]
+	}
 	for (int i = 0; i < page_cars_number; i++)
 	{
-		if (is_in_button(set_but[i])) draw_button(set_but[i]); //绘制 [修改]
-		else if (is_in_button(del_but[i])) draw_button(del_but[i]); //绘制 [删除]
+		if (is_in_button(set_but[i]))
+		{
+			draw_button(set_but[i]); //绘制 [修改]
+		}
+		else if (is_in_button(del_but[i]))
+		{
+			draw_button(del_but[i]); //绘制 [删除]
+		}
 	}
 	SetConsoleTextAttribute(hOut, CONSOLE_COLOR);
 
@@ -277,17 +366,44 @@ BUTTON browse_click()
 	ReadConsoleInput(hIn, &Buf, 1, &Result); //读取操作事件
 	while (Buf.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) //鼠标左键点击
 	{
-		if (is_in_button(id_but))return SORT_ID_BUTTON; //编号
-		else if (is_in_button(seat_but)) return SORT_SEAT_BUTTON; //座位数
-		else if (is_in_button(emission_but)) return SORT_EMISSION_BUTTON; //排量
-		else if (is_in_button(price_but)) return SORT_PRICE_BUTTON; //车辆价格
-		else if (is_in_button(previous_but)) return PREVIOUS_BUTTON; //上一页
-		else if (is_in_button(next_but)) return NEXT_BUTTON; //下一页
-		else if (is_in_button(browse_return_but)) return RETURN_BUTTON; //返回  
+		if (is_in_button(id_but))
+		{
+			return SORT_ID_BUTTON; //编号
+		}
+		else if (is_in_button(seat_but))
+		{
+			return SORT_SEAT_BUTTON; //座位数
+		}
+		else if (is_in_button(emission_but))
+		{
+			return SORT_EMISSION_BUTTON; //排量
+		}
+		else if (is_in_button(price_but))
+		{
+			return SORT_PRICE_BUTTON; //车辆价格
+		}
+		else if (is_in_button(previous_but))
+		{
+			return PREVIOUS_BUTTON; //上一页
+		}
+		else if (is_in_button(next_but))
+		{
+			return NEXT_BUTTON; //下一页
+		}
+		else if (is_in_button(browse_return_but))
+		{
+			return RETURN_BUTTON; //返回  
+		}
 		for (int i = 0; i < 20; i++)
 		{
-			if (is_in_button(set_but[i])) return SET_BUTTON; //修改
-			else if (is_in_button(del_but[i])) return DELETE_BUTTON; //删除
+			if (is_in_button(set_but[i]))
+			{
+				return SET_BUTTON; //修改
+			}
+			else if (is_in_button(del_but[i]))
+			{
+				return DELETE_BUTTON; //删除
+			}
 		}
 		ReadConsoleInput(hIn, &Buf, 1, &Result);
 	}
@@ -376,16 +492,46 @@ void draw_find_button()
 	//绘制按钮光标
 	mouse_pos = Buf.Event.MouseEvent.dwMousePosition; //获得鼠标位置
 	SetConsoleTextAttribute(hOut, CURSOR_COLOR);
-	if (is_in_button(find_id_but)) draw_button(find_id_but); //绘制 [  编  号  ]
-	else if (is_in_button(find_type_but)) draw_button(find_type_but); //绘制 [ 车辆型号 ]
-	else if (is_in_button(find_manufacturer_but)) draw_button(find_manufacturer_but); //绘制 [  厂  商  ]
-	else if (is_in_button(find_grade_but)) draw_button(find_grade_but); //绘制 [ 车型级别 ]
-	else if (is_in_button(find_seat_but)) draw_button(find_seat_but); //绘制 [  座位数  ]
-	else if (is_in_button(find_emission_but)) draw_button(find_emission_but); //绘制 [  排  量  ]
-	else if (is_in_button(find_gearbox_but)) draw_button(find_gearbox_but); //绘制 [  变速箱  ]
-	else if (is_in_button(find_colour_but)) draw_button(find_colour_but); //绘制 [ 车身颜色 ]
-	else if (is_in_button(find_price_but)) draw_button(find_price_but); //绘制 [ 车辆价格 ]
-	else if (is_in_button(find_return_but)) draw_button(find_return_but); //绘制 [  返  回  ]
+	if (is_in_button(find_id_but))
+	{
+		draw_button(find_id_but); //绘制 [  编  号  ]
+	}
+	else if (is_in_button(find_type_but))
+	{
+		draw_button(find_type_but); //绘制 [ 车辆型号 ]
+	}
+	else if (is_in_button(find_manufacturer_but))
+	{
+		draw_button(find_manufacturer_but); //绘制 [  厂  商  ]
+	}
+	else if (is_in_button(find_grade_but))
+	{
+		draw_button(find_grade_but); //绘制 [ 车型级别 ]
+	}
+	else if (is_in_button(find_seat_but))
+	{
+		draw_button(find_seat_but); //绘制 [  座位数  ]
+	}
+	else if (is_in_button(find_emission_but))
+	{
+		draw_button(find_emission_but); //绘制 [  排  量  ]
+	}
+	else if (is_in_button(find_gearbox_but))
+	{
+		draw_button(find_gearbox_but); //绘制 [  变速箱  ]
+	}
+	else if (is_in_button(find_colour_but))
+	{
+		draw_button(find_colour_but); //绘制 [ 车身颜色 ]
+	}
+	else if (is_in_button(find_price_but))
+	{
+		draw_button(find_price_but); //绘制 [ 车辆价格 ]
+	}
+	else if (is_in_button(find_return_but))
+	{
+		draw_button(find_return_but); //绘制 [  返  回  ]
+	}
 	SetConsoleTextAttribute(hOut, CONSOLE_COLOR);
 
 	Sleep(1000 / FPS);
@@ -396,16 +542,46 @@ BUTTON find_click()
 	ReadConsoleInput(hIn, &Buf, 1, &Result); //读取操作事件
 	while (Buf.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) //鼠标左键点击
 	{
-		if (is_in_button(find_id_but)) return FIND_ID_BUTTON; //编号
-		else if (is_in_button(find_type_but)) return FIND_TYPE_BUTTON; //型号
-		else if (is_in_button(find_manufacturer_but)) return FIND_MANUFACTURER_BUTTON; //厂商
-		else if (is_in_button(find_grade_but)) return FIND_GRADE_BUTTON; //级别
-		else if (is_in_button(find_seat_but)) return FIND_SEAT_BUTTON; //座位数
-		else if (is_in_button(find_emission_but)) return FIND_EMISSION_BUTTON; //排量
-		else if (is_in_button(find_gearbox_but)) return FIND_GEARBOX_BUTTON; //变速箱
-		else if (is_in_button(find_colour_but)) return FIND_COLOUR_BUTTON; //车身颜色
-		else if (is_in_button(find_price_but)) return FIND_PRICE_BUTTON; //价格
-		else if (is_in_button(find_return_but)) return RETURN_BUTTON; //返回
+		if (is_in_button(find_id_but))
+		{
+			return FIND_ID_BUTTON; //编号
+		}
+		else if (is_in_button(find_type_but))
+		{
+			return FIND_TYPE_BUTTON; //型号
+		}
+		else if (is_in_button(find_manufacturer_but))
+		{
+			return FIND_MANUFACTURER_BUTTON; //厂商
+		}
+		else if (is_in_button(find_grade_but))
+		{
+			return FIND_GRADE_BUTTON; //级别
+		}
+		else if (is_in_button(find_seat_but))
+		{
+			return FIND_SEAT_BUTTON; //座位数
+		}
+		else if (is_in_button(find_emission_but))
+		{
+			return FIND_EMISSION_BUTTON; //排量
+		}
+		else if (is_in_button(find_gearbox_but))
+		{
+			return FIND_GEARBOX_BUTTON; //变速箱
+		}
+		else if (is_in_button(find_colour_but))
+		{
+			return FIND_COLOUR_BUTTON; //车身颜色
+		}
+		else if (is_in_button(find_price_but))
+		{
+			return FIND_PRICE_BUTTON; //价格
+		}
+		else if (is_in_button(find_return_but))
+		{
+			return RETURN_BUTTON; //返回
+		}
 		ReadConsoleInput(hIn, &Buf, 1, &Result);
 	}
 	return NONE;
@@ -425,8 +601,14 @@ void draw_del_button()
 	//绘制按钮光标
 	mouse_pos = Buf.Event.MouseEvent.dwMousePosition; //获得鼠标位置
 	SetConsoleTextAttribute(hOut, CURSOR_COLOR);
-	if (is_in_button(del_confirm_but)) draw_button(del_confirm_but); //绘制 [确定]
-	else if (is_in_button(del_return_but)) draw_button(del_return_but); //绘制 [取消]
+	if (is_in_button(del_confirm_but))
+	{
+		draw_button(del_confirm_but); //绘制 [确定]
+	}
+	else if (is_in_button(del_return_but))
+	{
+		draw_button(del_return_but); //绘制 [取消]
+	}
 	SetConsoleTextAttribute(hOut, CONSOLE_COLOR);
 
 	Sleep(1000 / FPS);
@@ -437,8 +619,14 @@ BUTTON del_click()
 	ReadConsoleInput(hIn, &Buf, 1, &Result); //读取操作事件
 	while (Buf.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) //鼠标左键点击
 	{
-		if (is_in_button(del_confirm_but)) return CONFIRM_BUTTON; //确定
-		else if (is_in_button(del_return_but)) return RETURN_BUTTON; //取消
+		if (is_in_button(del_confirm_but))
+		{
+			return CONFIRM_BUTTON; //确定
+		}
+		else if (is_in_button(del_return_but))
+		{
+			return RETURN_BUTTON; //取消
+		}
 		ReadConsoleInput(hIn, &Buf, 1, &Result);
 	}
 	return NONE;
@@ -459,9 +647,18 @@ void draw_exit_button()
 	//绘制按钮光标
 	mouse_pos = Buf.Event.MouseEvent.dwMousePosition; //获得鼠标位置
 	SetConsoleTextAttribute(hOut, CURSOR_COLOR);
-	if (is_in_button(exit_yes_but)) draw_button(exit_yes_but); //绘制 [是]
-	else if (is_in_button(exit_no_but)) draw_button(exit_no_but); //绘制 [否]
-	else if (is_in_button(exit_cancel_but)) draw_button(exit_cancel_but); //绘制 [取消]
+	if (is_in_button(exit_yes_but))
+	{
+		draw_button(exit_yes_but); //绘制 [是]
+	}
+	else if (is_in_button(exit_no_but))
+	{
+		draw_button(exit_no_but); //绘制 [否]
+	}
+	else if (is_in_button(exit_cancel_but))
+	{
+		draw_button(exit_cancel_but); //绘制 [取消]
+	}
 	SetConsoleTextAttribute(hOut, CONSOLE_COLOR);
 
 	Sleep(1000 / FPS);
@@ -472,9 +669,18 @@ BUTTON exit_click()
 	ReadConsoleInput(hIn, &Buf, 1, &Result); //读取操作事件
 	while (Buf.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) //鼠标左键点击
 	{
-		if (is_in_button(exit_yes_but)) return YES; //是
-		else if (is_in_button(exit_no_but)) return NO; //否
-		else if (is_in_button(exit_cancel_but)) return CANCEL; //取消
+		if (is_in_button(exit_yes_but))
+		{
+			return YES; //是
+		}
+		else if (is_in_button(exit_no_but))
+		{
+			return NO; //否
+		}
+		else if (is_in_button(exit_cancel_but))
+		{
+			return CANCEL; //取消
+		}
 		ReadConsoleInput(hIn, &Buf, 1, &Result);
 	}
 	return NONE;
