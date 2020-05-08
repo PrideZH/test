@@ -7,6 +7,14 @@ BYTTON_INFO add_but = { 66, 11, 10, "增 添 车 辆" };
 BYTTON_INFO browse_but = { 66, 13, 10, "浏 览 全 部" };
 BYTTON_INFO find_but = { 66, 15, 10, "查 询 车 辆" };
 BYTTON_INFO exit_but = { 69, 17, 4, "退 出" };
+BYTTON_INFO input_but[] = { 
+	{ 79, 8, 5, "[输入]" }, { 79, 10, 5, "[输入]" }, { 79, 12, 5, "[输入]" }, { 79, 14, 5, "[输入]" },
+	{ 79, 16, 5, "[输入]" }, { 79, 18, 5, "[输入]" }, { 79, 20, 5, "[输入]" }, { 79, 22, 5, "[输入]" }
+};
+BYTTON_INFO empty_but[] = { 
+	{ 86, 8, 5, "[清空]" }, { 86, 10, 5, "[清空]" }, { 86, 12, 5, "[清空]" }, { 86, 14, 5, "[清空]" },
+	{ 86, 16, 5, "[清空]" }, { 86, 18, 5, "[清空]" }, { 86, 20, 5, "[清空]" }, { 86, 22, 5, "[清空]" }
+};
 //添加界面按钮
 BYTTON_INFO set_confirm_but = { 60, 24, 5, "[确定]" };
 BYTTON_INFO set_return_but = { 70, 24, 5, "[返回]" };
@@ -18,6 +26,20 @@ BYTTON_INFO price_but = { 107, 3, 11, "车辆价格(万)" };
 BYTTON_INFO next_but = { 77, 26, 5, "下一页" };
 BYTTON_INFO previous_but = { 60, 26, 5, "上一页" };
 BYTTON_INFO browse_return_but = { 121, 26, 3, "返回" };
+BYTTON_INFO set_but[] = { 
+	{ 124, 5, 3, "修改" }, { 124, 6, 3, "修改" }, { 124, 7, 3, "修改" }, { 124, 8, 3, "修改" },
+	{ 124, 9, 3, "修改" }, { 124, 10, 3, "修改" }, { 124, 11, 3, "修改" }, { 124, 12, 3, "修改" },
+	{ 124, 13, 3, "修改" }, { 124, 14, 3, "修改" }, { 124, 15, 3, "修改" }, { 124, 16, 3, "修改" },
+	{ 124, 17, 3, "修改" }, { 124, 18, 3, "修改" }, { 124, 19, 3, "修改" }, { 124, 20, 3, "修改" },
+	{ 124, 21, 3, "修改" }, { 124, 22, 3, "修改" }, { 124, 23, 3, "修改" }, { 124, 24, 3, "修改" }
+};
+BYTTON_INFO del_but[] = { 
+	{ 129, 5, 3, "删除" }, { 129, 6, 3, "删除" }, { 129, 7, 3, "删除" }, { 129, 8, 3, "删除" },
+	{ 129, 9, 3, "删除" }, { 129, 10, 3, "删除" }, { 129, 11, 3, "删除" }, { 129, 12, 3, "删除" },
+	{ 129, 13, 3, "删除" }, { 129, 14, 3, "删除" }, { 129, 15, 3, "删除" }, { 129, 16, 3, "删除" },
+	{ 129, 17, 3, "删除" }, { 129, 18, 3, "删除" }, { 129, 19, 3, "删除" }, { 129, 20, 3, "删除" },
+	{ 129, 21, 3, "删除" }, { 129, 22, 3, "删除" }, { 129, 23, 3, "删除" }, { 129, 24, 3, "删除" }
+};
 //查询界面按钮
 BYTTON_INFO find_id_but = { 55, 8, 11, "[  编  号  ]" };
 BYTTON_INFO find_type_but = { 75, 8, 11, "[ 车辆型号 ]" };
@@ -39,28 +61,22 @@ BYTTON_INFO exit_cancel_but = { 75, 15, 5, "[取消]" };
 
 void draw_window() 
 {
-	gotoxy(8, 2);
-	printf("╭——————————————————————————————————————————————————————————————╮\n");
+	draw_string(8, 2, "╭——————————————————————————————————————————————————————————————╮\n");
 	for (int i = 0; i < 24; i++)
 	{
-		gotoxy(8, 3 + i);
-		printf("|                                                                                                                             |\n");
+		draw_string(8, 3 + i, "|                                                                                                                             |\n");
 	}
-	gotoxy(8, 27);
-	printf("╰——————————————————————————————————————————————————————————————╯\n");
+	draw_string(8, 27, "╰——————————————————————————————————————————————————————————————╯\n");
 }
 
 void draw_popup()
 {
-	gotoxy(43, 11);
-	printf("╭———————————————————————————╮\n");
+	draw_string(43, 11, "╭———————————————————————————╮\n");
 	for (int i = 0; i < 5; i++)
 	{
-		gotoxy(43, 12 + i);
-		printf("|                                                       |\n");
+		draw_string(43, 12 + i, "|                                                       |\n");
 	}
-	gotoxy(43, 17);
-	printf("╰———————————————————————————╯\n");
+	draw_string(43, 17, "╰———————————————————————————╯\n");
 }
 
 void popup_prompt(const char *information)
@@ -157,55 +173,36 @@ BUTTON menu_click()
 void draw_set_windows(PCAR car)
 {
 	draw_window();
-	gotoxy(49, 6);
-	printf("编  号:%d", car->id);
-	gotoxy(49, 8);
-	printf("型  号:%s", car->type);
-	gotoxy(49, 10);
-	printf("厂  商:%s", car->manufacturer);
-	gotoxy(49, 12);
-	printf("级  别:%s", car->grade);
-	gotoxy(49, 14);
-	printf("座位数:%d", car->seat);
-	gotoxy(49, 16);
-	printf("排  量:%.2f", car->emission);
-	gotoxy(49, 18);
-	printf("变速箱:%s", car->gearbox);
-	gotoxy(49, 20);
-	printf("颜  色:%s", car->colour);
-	gotoxy(49, 22);
-	printf("价  格:%.2f", car->price);
+	gotoxy(49, 6); printf("编  号:%d", car->id);
+	gotoxy(49, 8); printf("型  号:%s", car->type);
+	gotoxy(49, 10); printf("厂  商:%s", car->manufacturer);
+	gotoxy(49, 12); printf("级  别:%s", car->grade);
+	gotoxy(49, 14); printf("座位数:%d", car->seat);
+	gotoxy(49, 16); printf("排  量:%.2f", car->emission);
+	gotoxy(49, 18); printf("变速箱:%s", car->gearbox);
+	gotoxy(49, 20); printf("颜  色:%s", car->colour);
+	gotoxy(49, 22); printf("价  格:%.2f", car->price);
 }
 
 void draw_set_button()
 {
 	//绘制按钮
-	for (int n = 0; n < 16; n+=2)
+	for (int i = 0; i < 8; i++) 
 	{
-		gotoxy(79, 8 + n);
-		printf("[输入]");
-		gotoxy(86, 8 + n);
-		printf("[清空]");
+		draw_button(input_but[i]); //绘制 [输入]
+		draw_button(empty_but[i]); //绘制 [清空]
 	}
 	draw_button(set_confirm_but); //绘制 [确定]
 	draw_button(set_return_but); //绘制 [返回]
 	//绘制按钮光标
 	mouse_pos = Buf.Event.MouseEvent.dwMousePosition; //获得鼠标位置
 	SetConsoleTextAttribute(hOut, CURSOR_COLOR);
-	if (mouse_pos.Y > 7 && mouse_pos.Y < 23 && 0 == mouse_pos.Y%2)
+	for (int i = 0; i < 8; i++)
 	{
-		if (mouse_pos.X >= 79 && mouse_pos.X <= 84)
-		{
-			gotoxy(79, mouse_pos.Y);
-			printf("[输入]");
-		}
-		else if (mouse_pos.X > 85 && mouse_pos.X < 92)
-		{
-			gotoxy(86, mouse_pos.Y);
-			printf("[清空]");
-		}
+		if (is_in_button(input_but[i])) draw_button(input_but[i]); //绘制 [输入]
+		else if (is_in_button(empty_but[i])) draw_button(empty_but[i]); //绘制 [清空]
 	}
-	else if(is_in_button(set_confirm_but)) draw_button(set_confirm_but); //绘制 [确定]
+	if (is_in_button(set_confirm_but)) draw_button(set_confirm_but); //绘制 [确定]
 	else if (is_in_button(set_return_but)) draw_button(set_return_but); //绘制 [返回]
 	SetConsoleTextAttribute(hOut, CONSOLE_COLOR);
 	Sleep(1000 / FPS);
@@ -216,19 +213,13 @@ BUTTON set_click()
 	ReadConsoleInput(hIn, &Buf, 1, &Result);
 	while (Buf.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) //鼠标左键点击
 	{
-		if (mouse_pos.Y > 7 && mouse_pos.Y < 23 && 0 == mouse_pos.Y % 2)
+		for (int i = 0; i < 8; i++)
 		{
-			if (mouse_pos.X > 78 && mouse_pos.X < 85) //输入
-			{
-				return INPUT_BUTTON;
-			}
-			else if (mouse_pos.X > 85 && mouse_pos.X < 92) //清空
-			{
-				return EMPTY_BUTTON;
-			}
+			if (is_in_button(input_but[i])) return BUTTON(INPUT_BUTTON_0 + i); //输入
+			else if (is_in_button(empty_but[i])) return BUTTON(EMPTY_BUTTON_0 + i); //清空
 		}
-		else if (is_in_button(set_confirm_but)) return CONFIRM_BUTTON;
-		else if (is_in_button(set_return_but)) return RETURN_BUTTON;
+		if (is_in_button(set_confirm_but)) return CONFIRM_BUTTON; //确定
+		else if (is_in_button(set_return_but)) return RETURN_BUTTON; //返回
 		ReadConsoleInput(hIn, &Buf, 1, &Result);
 	}
 	return NONE;
@@ -256,12 +247,10 @@ void draw_browse_button(int page_cars_number)
 	draw_button(next_but); //绘制 [下一页]
 	draw_button(previous_but); //绘制 [上一页]
 	draw_button(browse_return_but); //绘制 [返回]
-	for (int n = 0; n < page_cars_number; n++)
+	for (int i = 0; i < page_cars_number; i++)
 	{
-		gotoxy(124, 5 + n);
-		printf("修改");
-		gotoxy(129, 5 + n);
-		printf("删除");
+		draw_button(set_but[i]); //绘制 [修改]
+		draw_button(del_but[i]); //绘制 [删除]
 	}
 	//绘制按钮光标
 	mouse_pos = Buf.Event.MouseEvent.dwMousePosition; //获得鼠标位置
@@ -270,22 +259,14 @@ void draw_browse_button(int page_cars_number)
 	else if (is_in_button(seat_but)) draw_button(seat_but); //绘制 [座位数]
 	else if (is_in_button(emission_but)) draw_button(emission_but); //绘制 [排量(L)]
 	else if (is_in_button(price_but)) draw_button(price_but); //绘制 [车辆价格(万)]
-	else if(mouse_pos.Y > 4 && mouse_pos.Y < 26 && mouse_pos.Y < 5 + page_cars_number)//修改和删除操作
-	{
-		if (mouse_pos.X > 123 && mouse_pos.X < 128)
-		{
-			gotoxy(124, mouse_pos.Y);
-			printf("修改");
-		}
-		else if (mouse_pos.X > 128 && mouse_pos.X < 133)
-		{
-			gotoxy(129, mouse_pos.Y);
-			printf("删除");
-		}
-	}
 	else if (is_in_button(next_but)) draw_button(next_but); //绘制 [下一页]
 	else if (is_in_button(previous_but)) draw_button(previous_but); //绘制 [上一页]
 	else if (is_in_button(browse_return_but)) draw_button(browse_return_but); //绘制 [返回]
+	for (int i = 0; i < page_cars_number; i++)
+	{
+		if (is_in_button(set_but[i])) draw_button(set_but[i]); //绘制 [修改]
+		else if (is_in_button(del_but[i])) draw_button(del_but[i]); //绘制 [删除]
+	}
 	SetConsoleTextAttribute(hOut, CONSOLE_COLOR);
 
 	Sleep(1000 / FPS);
@@ -300,20 +281,14 @@ BUTTON browse_click()
 		else if (is_in_button(seat_but)) return SORT_SEAT_BUTTON; //座位数
 		else if (is_in_button(emission_but)) return SORT_EMISSION_BUTTON; //排量
 		else if (is_in_button(price_but)) return SORT_PRICE_BUTTON; //车辆价格
-		else if (mouse_pos.Y > 4 && mouse_pos.Y < 26)
-		{
-			if (mouse_pos.X > 123 && mouse_pos.X < 128) //修改
-			{
-				return SET_BUTTON;
-			}
-			else if (mouse_pos.X > 128 && mouse_pos.X < 133) //删除
-			{
-				return DELETE_BUTTON;
-			}
-		}
 		else if (is_in_button(previous_but)) return PREVIOUS_BUTTON; //上一页
 		else if (is_in_button(next_but)) return NEXT_BUTTON; //下一页
 		else if (is_in_button(browse_return_but)) return RETURN_BUTTON; //返回  
+		for (int i = 0; i < 20; i++)
+		{
+			if (is_in_button(set_but[i])) return SET_BUTTON; //修改
+			else if (is_in_button(del_but[i])) return DELETE_BUTTON; //删除
+		}
 		ReadConsoleInput(hIn, &Buf, 1, &Result);
 	}
 	return NONE;
@@ -346,57 +321,43 @@ void draw_browse_page(int page, int all_page)
 
 void draw_browse_sort(int sort_mode)
 {
-	gotoxy(13, 3);
-	printf("—");
-	gotoxy(70, 3);
-	printf("—");
-	gotoxy(80, 3);
-	printf("—");
-	gotoxy(119, 3);
-	printf("—");
+	draw_string(13, 3, "—");
+	draw_string(70, 3, "—");
+	draw_string(80, 3, "—");
+	draw_string(119, 3, "—");
 	switch (sort_mode)
 	{
-	case 0:
-		gotoxy(13, 3);
-		printf("↓");
+	case ID_ORDER: 
+		draw_string(13, 3, "↓"); 
 		break;
-	case 1:
-		gotoxy(13, 3);
-		printf("↑");
+	case ID_INVERTED:
+		draw_string(13, 3, "↑"); 
 		break;
-	case 2:
-		gotoxy(70, 3);
-		printf("↓");
+	case SEAT_ORDER: 
+		draw_string(70, 3, "↓"); 
 		break;
-	case 3:
-		gotoxy(70, 3);
-		printf("↑");
+	case SEAT_INVERTED: 
+		draw_string(70, 3, "↑"); 
 		break;
-	case 4:
-		gotoxy(80, 3);
-		printf("↓");
+	case EMISSION_ORDER: 
+		draw_string(80, 3, "↓"); 
 		break;
-	case 5:
-		gotoxy(80, 3);
-		printf("↑");
+	case EMISSION_INVERTED: 
+		draw_string(80, 3, "↑"); 
 		break;
-	case 6:
-		gotoxy(119, 3);
-		printf("↓");
+	case PRICE_ORDER: 
+		draw_string(119, 3, "↓");
 		break;
-	case 7:
-		gotoxy(119, 3);
-		printf("↑");
+	case PRICE_INVERTED: 
+		draw_string(119, 3, "↑"); 
 		break;
-
 	}
 }
 
 void draw_find_windows()
 {
 	draw_window();
-	gotoxy(64, 3);
-	printf("查询车辆信息");
+	draw_string(64, 3, "查询车辆信息");
 }
 
 void draw_find_button()
@@ -453,9 +414,7 @@ BUTTON find_click()
 void draw_del_windows()
 {
 	draw_popup();
-	gotoxy(63, 13);
-	printf("是否删除车辆信息");
-	draw_del_button();
+	draw_string(63, 13, "是否删除车辆信息");
 }
 
 void draw_del_button()
@@ -488,8 +447,7 @@ BUTTON del_click()
 void draw_exit_windows()
 {
 	draw_popup();
-	gotoxy(62, 13);
-	printf("是否退出程序并保存");
+	draw_string(62, 13, "是否退出程序并保存");
 }
 
 void draw_exit_button()
@@ -534,6 +492,12 @@ void draw_button(BYTTON_INFO but)
 {
 	gotoxy(but.x, but.y);
 	printf(but.content);
+}
+
+void draw_string(int x, int y, const char *str)
+{
+	gotoxy(x, y);
+	printf(str);
 }
 
 int is_in_button(BYTTON_INFO but)

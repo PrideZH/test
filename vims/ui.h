@@ -26,8 +26,10 @@ enum BUTTON
 	FIND_BUTTON,
 	EXIT_BUTTON,
 	//添加修改车辆界面按钮
-	INPUT_BUTTON,
-	EMPTY_BUTTON,
+	INPUT_BUTTON_0, INPUT_BUTTON_1, INPUT_BUTTON_2, INPUT_BUTTON_3,
+	INPUT_BUTTON_4, INPUT_BUTTON_5, INPUT_BUTTON_6, INPUT_BUTTON_7,
+	EMPTY_BUTTON_0, EMPTY_BUTTON_1, EMPTY_BUTTON_2, EMPTY_BUTTON_3, 
+	EMPTY_BUTTON_4, EMPTY_BUTTON_5, EMPTY_BUTTON_6, EMPTY_BUTTON_7,
 	//浏览车辆界面按钮
 	SORT_ID_BUTTON,
 	SORT_SEAT_BUTTON,
@@ -210,6 +212,11 @@ void gotoxy(int x, int y);
  * 说明：  绘制按钮
  ***********************************************************************/
 void draw_button(BYTTON_INFO but);
+
+/***********************************************************************
+ * 说明：  绘制字符串
+ ***********************************************************************/
+void draw_string(int x, int y, const char *str);
 
 /***********************************************************************
  * 说明：  判断鼠标是否在按钮上

@@ -209,6 +209,7 @@ int matching(PCAR car, INFO info, Data data)
 void sort(PCAR head, SORT sort_type)
 {
 	head->rear = merge_sort(head->rear, sort_type);
+	head->rear->front = head;
 }
 
 PCAR merge_sort(PCAR head, SORT sort_type) {

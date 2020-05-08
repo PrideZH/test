@@ -9,15 +9,9 @@ void add_car_fun()
 	while (1)
 	{
 		draw_set_button(); //绘制按钮
-		switch (set_click()) 
+		switch (BUTTON but = set_click()) 
 		{
-		case INPUT_BUTTON: //输入
-			car_input(car, mouse_pos.Y);
-			draw_set_windows(car);
-			break;
-		case EMPTY_BUTTON: //清空
-			car_empty(car, mouse_pos.Y);
-			draw_set_windows(car);
+		case NONE:
 			break;
 		case CONFIRM_BUTTON: //确定
 			add_car(head, car);
@@ -25,70 +19,74 @@ void add_car_fun()
 			return;
 		case RETURN_BUTTON: //返回
 			return;
+		default:
+			car_input(car, but); //输入
+			car_empty(car, but); //清空
+			draw_set_windows(car);
 		}
 	}
 }
 
-void car_input(PCAR car, int position)
+void car_input(PCAR car, BUTTON but)
 {
-	switch (position)
+	switch (but)
 	{
-	case 8:
+	case INPUT_BUTTON_0:
 		popup_input_str("请输入车辆型号:", car->type, MAX_CAR_TYPE);
 		break;
-	case 10:
+	case INPUT_BUTTON_1:
 		popup_input_str("请输入厂商:", car->manufacturer, MAX_CAR_MANUFACTURER);
 		break;
-	case 12:
+	case INPUT_BUTTON_2:
 		popup_input_str("请输入车辆级别:", car->grade, MAX_CAR_GRADE);
 		break;
-	case 14:
+	case INPUT_BUTTON_3:
 		popup_input_int("请输入车辆座位数:", &car->seat, MAX_CAR_SEAT);
 		if (car->seat < 0) car->seat = 0; //输入小于0时按0处理
 		break;
-	case 16:
+	case INPUT_BUTTON_4:
 		popup_input_float("请输入排量(L):", &car->emission, MAX_CAR_EMISSION );
 		if (car->emission < 0) car->emission = 0; //输入小于0时按0处理
 		break;
-	case 18:
+	case INPUT_BUTTON_5:
 		popup_input_str("请输入车辆变速箱:", car->gearbox, MAX_CAR_GEARBOX);
 		break;
-	case 20:
+	case INPUT_BUTTON_6:
 		popup_input_str("请输入车身颜色:", car->colour, MAX_CAR_COLOUR);
 		break;
-	case 22:
+	case INPUT_BUTTON_7:
 		popup_input_float("请输入车辆价格(万):", &car->price, MAX_CAR_PRICE);
 		if (car->price < 0) car->price = 0; //输入小于0时按0处理
 		break;
 	}
 }
 
-void car_empty(PCAR car, int position)
+void car_empty(PCAR car, BUTTON but)
 {
-	switch (mouse_pos.Y)
+	switch (but)
 	{
-	case 8:
+	case EMPTY_BUTTON_0:
 		strcpy_s(car->type, " ");
 		break;
-	case 10:
+	case EMPTY_BUTTON_1:
 		strcpy_s(car->manufacturer, " ");
 		break;
-	case 12:
+	case EMPTY_BUTTON_2:
 		strcpy_s(car->grade, " ");
 		break;
-	case 14:
+	case EMPTY_BUTTON_3:
 		car->seat = 0;
 		break;
-	case 16:
+	case EMPTY_BUTTON_4:
 		car->emission = 0;
 		break;
-	case 18:
+	case EMPTY_BUTTON_5:
 		strcpy_s(car->gearbox, " ");
 		break;
-	case 20:
+	case EMPTY_BUTTON_6:
 		strcpy_s(car->colour, " ");
 		break;
-	case 22:
+	case EMPTY_BUTTON_7:
 		car->price = 0;
 		break;
 	}
@@ -199,7 +197,7 @@ void find_car_fun()
 			list = get_list(MANUFACTURER, data);
 			find_car_browse(list);
 			break;
-		case FIND_SEAT_BUTTON: //查询车辆
+		case FIND_SEAT_BUTTON: //座位数
 			popup_input_int("请输入座位数:", &data.i, MAX_CAR_SEAT);
 			list = get_list(SEAT, data);
 			find_car_browse(list);
@@ -249,14 +247,9 @@ void set_car_fun(PCAR car)
 	while (1)
 	{
 		draw_set_button(); //绘制按钮
-		switch (set_click())
+		switch (BUTTON but = set_click())
 		{
-		case INPUT_BUTTON: //输入
-			car_input(&car_inof, mouse_pos.Y);
-			break;
-		case EMPTY_BUTTON: //清空
-			car_empty(&car_inof, mouse_pos.Y);
-			draw_set_windows(&car_inof);
+		case NONE:
 			break;
 		case CONFIRM_BUTTON: //确定
 			*car = car_inof;
@@ -264,6 +257,10 @@ void set_car_fun(PCAR car)
 			return;
 		case RETURN_BUTTON: //返回
 			return;
+		default:
+			car_input(&car_inof, but); //输入
+			car_empty(&car_inof, but); //清空
+			draw_set_windows(&car_inof);
 		}
 	}
 }
