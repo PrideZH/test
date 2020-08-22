@@ -22,12 +22,12 @@ void run(int x, int y, int e_x, int e_y)
 	close_list = list_create();
 	// 添加起点到open
 	list_add(open_list, x, y);
-	map[y][x] = 2; // 标准该节点为待搜索点
+	map[y][x] = 2; // 标记该节点为待搜索点
 	// 计算fgh值
 	fgh[y][x][1] = 0;
 	fgh[y][x][2] = (abs(e_y - y) + abs(e_x - x)) * 10;
 	fgh[y][x][0] = fgh[y][x][1] + fgh[y][x][2];
-	// 设置父节点为自己
+	// 设置起点的父节点为自己
 	father[y][x][0] = y;
 	father[y][x][1] = x;
 	// 添加终点
@@ -88,9 +88,9 @@ void run(int x, int y, int e_x, int e_y)
 			int f = g + h;
 			
 			// 已经在open_list中时 比较G值 
-			if(3 == map[next_y_tem][next_x_tem])
+			if(2 == map[next_y_tem][next_x_tem])
 			{
-				if(fgh[next_y_tem][next_x_tem][1] < f)
+				if(fgh[next_y_tem][next_x_tem][1] > g)
 				{
 					// G更小 设置当前节点为他的父节点
 					father[next_y_tem][next_x_tem][0] = node->y;
